@@ -1,11 +1,13 @@
 import pygame
 
 from engine.app import App as BaseApp
+from engine.entity import Entity
+from engine.scene import Scene
 
 
 class Game(BaseApp):
     def setup(self) -> None:
-        pass
+        self.main_scene = Scene()
 
     def loop(self) -> None:
         if self.key_press[pygame.K_ESCAPE]:
