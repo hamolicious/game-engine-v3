@@ -1,0 +1,4 @@
+
+run:
+	python dev.py
+
