@@ -1,5 +1,7 @@
 import pygame
 
+from .scene import Scene
+
 
 class App:
     def __init__(self) -> None:
@@ -15,38 +17,41 @@ class App:
         self.mouse_press: tuple[bool, bool, bool]
         self.key_press: pygame.key.ScancodeWrapper
 
-    def init_pygame(self) -> None:
+        self._current_scene: Scene | None = None
+
+    def _init_pygame(self) -> None:
         pygame.init()
         self.screen = pygame.display.set_mode(self.display_size)
         self.screen.fill([255, 255, 255])
         pygame.display.set_icon(self.screen)
 
-    def check_events(self) -> None:
+    def _check_events(self) -> None:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 quit()
 
-    def update_io(self) -> None:
+    def _update_io(self) -> None:
         self.mouse_pos = pygame.mouse.get_pos()
         self.mouse_rel = pygame.mouse.get_rel()
         self.mouse_press = pygame.mouse.get_pressed()
         self.key_press = pygame.key.get_pressed()
 
-    def update_display(self) -> None:
+    def _update_display(self) -> None:
         pygame.display.update()
         self.delta_time = self.clock.tick(self.fps)
         pygame.display.set_caption(f"Framerate: {int(self.clock.get_fps())}")
 
     def run(self):
-        self.init_pygame()
+        self._init_pygame()
         self.setup()
 
         while True:
-            self.check_events()
-            self.update_io()
+            self._check_events()
+            self._update_io()
             self.loop()
-            self.update_display()
+            self._render()
+            self._update_display()
 
     def setup(self) -> None:
         pass
@@ -56,8 +61,15 @@ class App:
             pygame.quit()
             quit(0)
 
-    def render(self) -> None:
-        self.screen.fill("black")
+    def _render(self) -> None:
+        if self._current_scene is None:
+            return
+
+        for ent in self._current_scene.get_all_entities():
+            if ent._renderer is None or ent._transform is None:
+                continue
+
+            ent._renderer.render(self.screen)
 
 
 if __name__ == "__main__":

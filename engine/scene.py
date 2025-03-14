@@ -1,3 +1,5 @@
+from typing import Generator
+
 from .entity import Entity
 
 
@@ -10,3 +12,7 @@ class Scene:
 
     def get_entity(self, id: str) -> Entity | None:
         return self._entities.get(id, None)
+
+    def get_all_entities(self) -> Generator[Entity, None, None]:
+        for ent in self._entities.values():
+            yield ent

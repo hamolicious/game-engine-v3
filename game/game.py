@@ -13,6 +13,3 @@ class Game(BaseApp):
         if self.key_press[pygame.K_ESCAPE]:
             pygame.quit()
             quit(0)
-
-    def render(self) -> None:
-        self.screen.fill("black")
