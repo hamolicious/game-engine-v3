@@ -3,7 +3,7 @@ from typing import cast
 import pygame
 
 from engine import builtin_components
-from engine.builtin_components import Keyboard
+from engine.internal_components import Keyboard, Time
 
 from .ecs import ECSManager
 
@@ -14,7 +14,7 @@ class App:
         self.fps = 0
 
         self.clock = pygame.time.Clock()
-        self.delta_time = 0
+        self.delta_time = 0.0
 
         self.screen: pygame.Surface
         self.mouse_pos: tuple[int, int]
@@ -39,18 +39,20 @@ class App:
         self.mouse_pos = pygame.mouse.get_pos()
         self.mouse_rel = pygame.mouse.get_rel()
         self.mouse_press = pygame.mouse.get_pressed()
+        self.key_press = pygame.key.get_pressed()
 
-        entity_id = list(self.ecs_manager.query_all_exist(Keyboard))[0]
-        keyboard = cast(
-            Keyboard, self.ecs_manager.fetch_components(entity_id, Keyboard)[Keyboard]
-        )
-
-        keyboard._keys = pygame.key.get_pressed()
+        keyboard = self.ecs_manager.fetch_only_one(Keyboard)
+        keyboard._keys = self.key_press
 
     def _update_display(self) -> None:
         pygame.display.update()
-        self.delta_time = self.clock.tick(self.fps)
-        pygame.display.set_caption(f"Framerate: {int(self.clock.get_fps())}")
+        self.delta_time = self.clock.tick(self.fps) / 1000
+        self.actual_fps = self.clock.get_fps()
+        pygame.display.set_caption(f"Framerate: {int(self.actual_fps)}")
+
+        time = self.ecs_manager.fetch_only_one(Time)
+        time.delta_time = self.delta_time
+        time.fps = self.actual_fps
 
     def run(self, ecs_manager: ECSManager):
         self.ecs_manager = ecs_manager

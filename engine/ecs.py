@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from hashlib import md5
 from time import time
-from typing import Callable, Generator, Type, TypeVar, TypeVarTuple
+from typing import Callable, Generator, Type, TypeVar, TypeVarTuple, cast
 
 from engine import component
 from engine.component import Component
@@ -33,6 +33,9 @@ class _HasComponentMap:
         curr_map = self._map.get(entity_id, set())
         self._map[entity_id] = curr_map | set(components)
         return
+
+
+T = TypeVar("T", bound=Component)
 
 
 class ECSManager:
@@ -80,6 +83,11 @@ class ECSManager:
         for entity_id in self.components.get(comp_list[0], set()):
             if self.has_map.has(entity_id, *comp_list):
                 yield entity_id
+
+    def fetch_only_one(self, component: Type[T]) -> T:
+        ids = list(self.query_all_exist(component))
+        assert len(ids) == 1, f"Found more than 1 instance! {component=}"
+        return cast(T, self.fetch_components(ids[0], component)[component])
 
     def fetch_components(
         self, entity_id: EntityId, *components: Type[Component]

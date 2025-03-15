@@ -3,7 +3,7 @@ from typing import Generator, cast
 import pygame
 
 from engine import builtin_systems
-from engine.builtin_components.keyboard import Keyboard
+from engine.internal_components import Keyboard, Time
 
 from .app import App
 from .ecs import ECSManager
@@ -23,7 +23,19 @@ class Engine:
             self._ecs_manager.create_entity(Entity(*entity._components))
 
         self._ecs_manager.create_entity(
-            Entity(Keyboard(keys=cast(pygame.key.ScancodeWrapper, {})))
+            Entity(
+                Keyboard(
+                    keys=cast(pygame.key.ScancodeWrapper, {}),
+                )
+            )
+        )
+        self._ecs_manager.create_entity(
+            Entity(
+                Time(
+                    delta_time=0,
+                    fps=0,
+                )
+            )
         )
 
         self._ecs_manager.register_system(builtin_systems.follow_player)

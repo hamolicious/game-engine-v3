@@ -22,6 +22,7 @@ class Game(Engine):
         yield Entity(
             builtin_components.Name("Log"),
             builtin_components.Transform2D(world_pos=Vector2(300, 500)),
+            builtin_components.Motion(),
             builtin_components.Sprite(src="./assets/wood log sprite sheet.png"),
             builtin_components.Collision(),
         )
