@@ -1,3 +1,4 @@
+from time import time
 from typing import cast
 
 import pygame
@@ -5,6 +6,7 @@ import pygame
 from engine import builtin_components
 from engine.internal_components import Keyboard, Time
 from engine.internal_components.display import Display
+from engine.metrics import Metrics
 from engine.types import Stages
 
 from .ecs import ECSManager
@@ -74,10 +76,16 @@ class App:
             self._update_display()
 
     def setup(self) -> None:
+        start = time()
         self.ecs_manager.run_systems(Stages.SETUP)
+        Metrics.TOTAL_SETUP_TIME.set_value((time() - start) * 1000)
 
     def loop(self) -> None:
+        start = time()
         self.ecs_manager.run_systems(Stages.UPDATE)
+        Metrics.TOTAL_UPDATE_TIME.set_value((time() - start) * 1000)
 
     def _render(self) -> None:
+        start = time()
         self.ecs_manager.run_systems(Stages.RENDER)
+        Metrics.TOTAL_RENDER_TIME.set_value((time() - start) * 1000)
