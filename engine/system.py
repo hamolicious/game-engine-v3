@@ -7,7 +7,7 @@ from engine.ecs import ECSManager
 
 # TODO: check how to type arbitrary amount of args
 def system(
-    original_function: Callable[["ECSManager"], None] | None = None,
+    original_function: Callable[[ECSManager], None] | None = None,
 ):
     def _decorate(function):
         @functools.wraps(function)

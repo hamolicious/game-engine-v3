@@ -90,8 +90,10 @@ class App:
             transform = cast(
                 builtin_components.Transform2D, comps[builtin_components.Transform2D]
             )
+
             renderables.append((transform, sprite))
 
         renderables.sort(key=lambda e: e[0].z)
         for render in renderables:
-            self.screen.blit(render[1].surf, render[0].world_position.xy)
+            final_pos = render[0].world_position + render[0].local_position
+            self.screen.blit(render[1].surf, final_pos.xy)
