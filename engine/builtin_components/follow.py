@@ -5,7 +5,7 @@ class FollowPlayer(Component):
     def __init__(self) -> None:
         super().__init__()
 
-        self.distance = 10**2
-        self.speed = 1
+        self.distance = 100**2
+        self.speed = 90
 
         self.active = True
