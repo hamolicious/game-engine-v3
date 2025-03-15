@@ -4,6 +4,8 @@ import pygame
 
 from engine import builtin_components
 from engine.internal_components import Keyboard, Time
+from engine.internal_components.display import Display
+from engine.types import Stages
 
 from .ecs import ECSManager
 
@@ -28,6 +30,10 @@ class App:
         self.screen = pygame.display.set_mode(self.display_size)
         self.screen.fill([255, 255, 255])
         pygame.display.set_icon(self.screen)
+
+        display = self.ecs_manager.fetch_only_one(Display)
+        display.surface = self.screen
+        display.width, display.height = self.screen.get_size()
 
     def _check_events(self) -> None:
         for event in pygame.event.get():
@@ -68,32 +74,10 @@ class App:
             self._update_display()
 
     def setup(self) -> None:
-        pass
+        self.ecs_manager.run_systems(Stages.SETUP)
 
     def loop(self) -> None:
-        self.ecs_manager.run_systems()
+        self.ecs_manager.run_systems(Stages.UPDATE)
 
     def _render(self) -> None:
-        entities = list(
-            self.ecs_manager.query_all_exist(
-                builtin_components.Sprite, builtin_components.Transform2D
-            )
-        )
-
-        renderables = []
-        for entity_id in entities:
-            comps = self.ecs_manager.fetch_components(
-                entity_id, builtin_components.Sprite, builtin_components.Transform2D
-            )
-
-            sprite = cast(builtin_components.Sprite, comps[builtin_components.Sprite])
-            transform = cast(
-                builtin_components.Transform2D, comps[builtin_components.Transform2D]
-            )
-
-            renderables.append((transform, sprite))
-
-        renderables.sort(key=lambda e: e[0].z)
-        for render in renderables:
-            final_pos = render[0].world_position + render[0].local_position
-            self.screen.blit(render[1].surf, final_pos.xy)
+        self.ecs_manager.run_systems(Stages.RENDER)

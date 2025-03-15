@@ -3,7 +3,8 @@ from typing import Generator, cast
 import pygame
 
 from engine import builtin_systems
-from engine.internal_components import Keyboard, Time
+from engine.internal_components import Display, Keyboard, Time
+from engine.types import Stages
 
 from .app import App
 from .ecs import ECSManager
@@ -14,8 +15,6 @@ class Engine:
     def __init__(self) -> None:
         self._ecs_manager = ECSManager()
         self._register_setup_entities()
-
-        # TODO: control screen size and whatnot with a special component? 🤔😲
         self._app = App()
 
     def _register_setup_entities(self) -> None:
@@ -37,10 +36,19 @@ class Engine:
                 )
             )
         )
+        self._ecs_manager.create_entity(
+            Entity(
+                Display(surface=pygame.Surface((0, 0)), width=0, height=0),
+            )
+        )
 
-        self._ecs_manager.register_system(builtin_systems.exit_on_esc)
-        self._ecs_manager.register_system(builtin_systems.follow_player)
-        self._ecs_manager.register_system(builtin_systems.simple_wasd)
+        self._ecs_manager.register_system(builtin_systems.exit_on_esc, Stages.UPDATE)
+        self._ecs_manager.register_system(builtin_systems.follow_player, Stages.UPDATE)
+        self._ecs_manager.register_system(builtin_systems.simple_wasd, Stages.UPDATE)
+
+        self._ecs_manager.register_system(
+            builtin_systems.sprite_renderer, Stages.RENDER
+        )
 
     def run(self) -> None:
         self._app.run(self._ecs_manager)

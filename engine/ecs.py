@@ -4,9 +4,9 @@ from hashlib import md5
 from time import time
 from typing import Callable, Generator, Type, TypeVar, TypeVarTuple, cast
 
-from engine import component
 from engine.component import Component
 from engine.entity import Entity, EntityId
+from engine.types import Stages
 
 
 class _HasComponentMap:
@@ -44,7 +44,11 @@ class ECSManager:
         self.components: dict[type[Component], set[EntityId]] = {}
         self.has_map = _HasComponentMap()
 
-        self.systems: list[Callable[[ECSManager], None]] = []
+        self.systems: dict[Stages, list[Callable[[ECSManager], None]]] = {
+            Stages.SETUP: [],
+            Stages.UPDATE: [],
+            Stages.RENDER: [],
+        }
 
     @staticmethod
     def _generate_entity_id() -> EntityId:
@@ -122,15 +126,19 @@ class ECSManager:
 
         return True
 
-    def register_system(self, system: Callable[[ECSManager], None]) -> None:
-        self.systems.append(system)
+    def register_system(
+        self, system: Callable[[ECSManager], None], stage: Stages = Stages.UPDATE
+    ) -> None:
+        self.systems[stage].append(system)
 
-    def unregister_system(self, system: Callable[[ECSManager], None]) -> bool:
-        if system in self.systems:
-            self.systems.remove(system)
+    def unregister_system(
+        self, system: Callable[[ECSManager], None], stage: Stages = Stages.UPDATE
+    ) -> bool:
+        if system in self.systems[stage]:
+            self.systems[stage].remove(system)
             return True
         return False
 
-    def run_systems(self) -> None:
-        for system in self.systems:
+    def run_systems(self, stage: Stages) -> None:
+        for system in self.systems[stage]:
             system(self)
