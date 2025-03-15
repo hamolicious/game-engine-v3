@@ -38,6 +38,7 @@ class Engine:
             )
         )
 
+        self._ecs_manager.register_system(builtin_systems.exit_on_esc)
         self._ecs_manager.register_system(builtin_systems.follow_player)
         self._ecs_manager.register_system(builtin_systems.simple_wasd)
 
