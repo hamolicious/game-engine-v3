@@ -1,11 +1,14 @@
 import functools
-from typing import Callable
+from typing import Callable, Type
 
 from engine.component import Component
+from engine.ecs import ECSManager
 
 
 # TODO: check how to type arbitrary amount of args
-def system(original_function: Callable[[Component], None] | None = None):
+def system(
+    original_function: Callable[["ECSManager"], None] | None = None,
+):
     def _decorate(function):
         @functools.wraps(function)
         def wrapped_function(*args, **kwargs):

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from hashlib import md5
 from time import time
 from typing import Callable, Generator, Type, TypeVar, TypeVarTuple
@@ -39,7 +41,7 @@ class ECSManager:
         self.components: dict[type[Component], set[EntityId]] = {}
         self.has_map = _HasComponentMap()
 
-        self.systems: list[Callable[[], None]] = []
+        self.systems: list[Callable[[ECSManager], None]] = []
 
     @staticmethod
     def _generate_entity_id() -> EntityId:
@@ -114,10 +116,10 @@ class ECSManager:
 
         return True
 
-    def register_system(self, system: Callable[[], None]) -> None:
+    def register_system(self, system: Callable[[ECSManager], None]) -> None:
         self.systems.append(system)
 
-    def unregister_system(self, system: Callable[[], None]) -> bool:
+    def unregister_system(self, system: Callable[[ECSManager], None]) -> bool:
         if system in self.systems:
             self.systems.remove(system)
             return True
@@ -125,4 +127,4 @@ class ECSManager:
 
     def run_systems(self) -> None:
         for system in self.systems:
-            system()
+            system(self)
