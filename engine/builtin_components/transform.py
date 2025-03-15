@@ -2,6 +2,8 @@ from typing import Generic, Self, TypeVar, cast
 
 from pygame import Vector2, Vector3
 
+from ..component import Component
+
 T = TypeVar(
     "T",
     bound=Vector2 | Vector3,
@@ -36,9 +38,9 @@ class Transform(Generic[T]):
         return cast(T, self._size.copy())
 
 
-class Transform2D(Transform[Vector2]):
+class Transform2D(Transform[Vector2], Component):
     pass
 
 
-class Transform3D(Transform[Vector3]):
+class Transform3D(Transform[Vector3], Component):
     pass

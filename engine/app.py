@@ -1,6 +1,8 @@
 import pygame
 
-from .scene import Scene
+from engine import builtin_components
+
+from .ecs import ECSManager
 
 
 class App:
@@ -17,7 +19,7 @@ class App:
         self.mouse_press: tuple[bool, bool, bool]
         self.key_press: pygame.key.ScancodeWrapper
 
-        self._current_scene: Scene | None = None
+        self.ecs_manager: ECSManager
 
     def _init_pygame(self) -> None:
         pygame.init()
@@ -42,7 +44,9 @@ class App:
         self.delta_time = self.clock.tick(self.fps)
         pygame.display.set_caption(f"Framerate: {int(self.clock.get_fps())}")
 
-    def run(self):
+    def run(self, ecs_manager: ECSManager):
+        self.ecs_manager = ecs_manager
+
         self._init_pygame()
         self.setup()
 
@@ -62,16 +66,12 @@ class App:
             quit(0)
 
     def _render(self) -> None:
-        if self._current_scene is None:
-            return
+        for entity_id in self.ecs_manager.query_all_exist(
+            builtin_components.Sprite, builtin_components.Transform2D
+        ):
+            comps = self.ecs_manager.fetch_components(
+                entity_id, builtin_components.Sprite, builtin_components.Transform2D
+            )
 
-        for ent in self._current_scene.get_all_entities():
-            if ent._renderer is None or ent._transform is None:
-                continue
-
-            ent._renderer.render(self.screen)
-
-
-if __name__ == "__main__":
-    app = App()
-    app.run()
+            sprite = comps[builtin_components.Sprite]
+            transform = comps[builtin_components.Transform2D]

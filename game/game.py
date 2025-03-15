@@ -1,15 +1,34 @@
-import pygame
+from typing import Generator
 
-from engine.app import App as BaseApp
+from engine import Engine, builtin_components
 from engine.entity import Entity
-from engine.scene import Scene
+from engine.system import system
 
 
-class Game(BaseApp):
-    def setup(self) -> None:
-        self.main_scene = Scene()
+class Game(Engine):
+    def setup(self) -> Generator[Entity, None, None]:
+        yield Entity(
+            builtin_components.Name("Player"),
+            builtin_components.Transform2D(),
+            builtin_components.Motion(),
+            builtin_components.Sprite(),
+            builtin_components.Collision(),
+            builtin_components.Health(),
+            builtin_components.WASD(),
+        )
 
-    def loop(self) -> None:
-        if self.key_press[pygame.K_ESCAPE]:
-            pygame.quit()
-            quit(0)
+        yield Entity(
+            builtin_components.Name("Log"),
+            builtin_components.Transform2D(),
+            builtin_components.Sprite(),
+            builtin_components.Collision(),
+        )
+
+        yield Entity(
+            builtin_components.Name("Orb"),
+            builtin_components.Transform2D(),
+            builtin_components.Motion(),
+            builtin_components.Sprite(),
+            builtin_components.Health(),
+            # builtin_components.Follow(),
+        )
