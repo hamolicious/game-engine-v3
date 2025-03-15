@@ -12,11 +12,24 @@ T = TypeVar(
 
 
 class Transform(Generic[T]):
-    def __init__(self, *, world_pos: T, local_pos: T, size: T, rot: float) -> None:
+    def __init__(
+        self,
+        *,
+        world_pos: T,
+        local_pos: T,
+        size: T,
+        rot: float,
+        z: float,
+    ) -> None:
         self._world_pos: T = world_pos
         self._local_pos: T = local_pos
         self._size: T = size
         self._rot: float = rot
+        self._z: float = z
+
+    def set_z(self, new_z: float) -> Self:
+        self._z = new_z
+        return self
 
     def set_world_position(self, new_pos: T) -> Self:
         self._world_pos = cast(T, new_pos.copy())
@@ -38,6 +51,10 @@ class Transform(Generic[T]):
     def size(self) -> T:
         return cast(T, self._size.copy())
 
+    @property
+    def z(self) -> float:
+        return self._z
+
 
 class Transform2D(Transform[Vector2], Component):
     def __init__(
@@ -47,5 +64,12 @@ class Transform2D(Transform[Vector2], Component):
         local_pos: Vector2 = Vector2(0, 0),
         size: Vector2 = Vector2(1, 1),
         rot: float = 0,
+        z: float = 0,
     ) -> None:
-        super().__init__(world_pos=world_pos, local_pos=local_pos, size=size, rot=rot)
+        super().__init__(
+            world_pos=world_pos,
+            local_pos=local_pos,
+            size=size,
+            rot=rot,
+            z=z,
+        )

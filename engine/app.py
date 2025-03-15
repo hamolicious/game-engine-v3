@@ -80,6 +80,7 @@ class App:
             )
         )
 
+        renderables = []
         for entity_id in entities:
             comps = self.ecs_manager.fetch_components(
                 entity_id, builtin_components.Sprite, builtin_components.Transform2D
@@ -89,5 +90,8 @@ class App:
             transform = cast(
                 builtin_components.Transform2D, comps[builtin_components.Transform2D]
             )
+            renderables.append((transform, sprite))
 
-            self.screen.blit(sprite.surf, transform.world_position.xy)
+        renderables.sort(key=lambda e: e[0].z)
+        for render in renderables:
+            self.screen.blit(render[1].surf, render[0].world_position.xy)
