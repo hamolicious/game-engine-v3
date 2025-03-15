@@ -17,10 +17,7 @@ class Engine:
         self._register_setup_entities()
         self._app = App()
 
-    def _register_setup_entities(self) -> None:
-        for entity in self.setup():
-            self._ecs_manager.create_entity(Entity(*entity._components))
-
+    def _spawn_builtin_resources(self) -> None:
         self._ecs_manager.create_entity(
             Entity(
                 Keyboard(
@@ -42,6 +39,14 @@ class Engine:
             )
         )
 
+    def _register_setup_entities(self) -> None:
+        self._spawn_builtin_resources()
+
+        for entity in self.setup():
+            self._ecs_manager.create_entity(Entity(*entity._components))
+
+        self._ecs_manager.register_system(builtin_systems.setup_cameras, Stages.SETUP)
+
         self._ecs_manager.register_system(builtin_systems.exit_on_esc, Stages.UPDATE)
         self._ecs_manager.register_system(builtin_systems.follow_player, Stages.UPDATE)
         self._ecs_manager.register_system(builtin_systems.simple_wasd, Stages.UPDATE)
@@ -49,6 +54,7 @@ class Engine:
         self._ecs_manager.register_system(
             builtin_systems.sprite_renderer, Stages.RENDER
         )
+        self._ecs_manager.register_system(builtin_systems.camera, Stages.DRAW)
 
     def run(self) -> None:
         self._app.run(self._ecs_manager)

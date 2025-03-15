@@ -23,3 +23,4 @@ class Metrics:
     TOTAL_SETUP_TIME = Metric()
     TOTAL_RENDER_TIME = Metric()
     TOTAL_UPDATE_TIME = Metric()
+    TOTAL_DRAW_TIME = Metric()

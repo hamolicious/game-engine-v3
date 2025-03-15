@@ -34,6 +34,12 @@ class _HasComponentMap:
         self._map[entity_id] = curr_map | set(components)
         return
 
+    def add_component(self, entity_id: EntityId, component: Type[Component]) -> None:
+        if self._map.get(entity_id) is None:
+            self._map[entity_id] = set()
+
+        self._map[entity_id].add(component)
+
 
 T = TypeVar("T", bound=Component)
 
@@ -48,6 +54,7 @@ class ECSManager:
             Stages.SETUP: [],
             Stages.UPDATE: [],
             Stages.RENDER: [],
+            Stages.DRAW: [],
         }
 
     @staticmethod
@@ -57,14 +64,9 @@ class ECSManager:
     def create_entity(self, entity: Entity) -> EntityId:
         new_id = self._generate_entity_id()
         self.entities[new_id] = entity
-        self.has_map.set_components(new_id, *map(lambda i: type(i), entity._components))
 
         for comp in entity._components:
-            ct = type(comp)
-            if ct not in self.components:
-                self.components[ct] = set()
-
-            self.components[ct].add(new_id)
+            self.add_component_to_entity(new_id, comp)
 
         return new_id
 
@@ -106,7 +108,12 @@ class ECSManager:
     def add_component_to_entity(
         self, entity_id: EntityId, component: Component
     ) -> None:
-        self.entities[entity_id]._components.append(component)
+        ct = type(component)
+        if ct not in self.components:
+            self.components[ct] = set()
+
+        self.components[ct].add(entity_id)
+        self.has_map.add_component(entity_id, type(component))
 
     def remove_component_from_entity(
         self, entity_id: EntityId, component_type: Type[Component]
@@ -125,6 +132,7 @@ class ECSManager:
             raise RuntimeError(f"wtf? {component_type=}")
 
         self.entities[entity_id]._components.remove(value[0])
+        self.has_map.remove_components(entity_id, component_type)
 
         return True
 

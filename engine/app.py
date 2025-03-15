@@ -73,6 +73,7 @@ class App:
             self._update_io()
             self.loop()
             self._render()
+            self._draw()
             self._update_display()
 
     def setup(self) -> None:
@@ -89,3 +90,8 @@ class App:
         start = time()
         self.ecs_manager.run_systems(Stages.RENDER)
         Metrics.TOTAL_RENDER_TIME.set_value((time() - start) * 1000)
+
+    def _draw(self) -> None:
+        start = time()
+        self.ecs_manager.run_systems(Stages.DRAW)
+        Metrics.TOTAL_DRAW_TIME.set_value((time() - start) * 1000)

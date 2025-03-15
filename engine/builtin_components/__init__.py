@@ -1,3 +1,4 @@
+from .camera import Camera
 from .collision import Collision
 from .follow import FollowPlayer
 from .health import Health

@@ -56,6 +56,11 @@ class Game(Engine):
         self._ecs_manager.register_system(bop_up_and_down)
 
         yield Entity(
+            builtin_components.Transform2D(),
+            builtin_components.Camera(),
+        )
+
+        yield Entity(
             builtin_components.Name("Background"),
             builtin_components.Transform2D(z=-1),
             builtin_components.Sprite(
