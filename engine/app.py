@@ -3,6 +3,7 @@ from typing import cast
 import pygame
 
 from engine import builtin_components
+from engine.builtin_components import Keyboard
 
 from .ecs import ECSManager
 
@@ -19,7 +20,6 @@ class App:
         self.mouse_pos: tuple[int, int]
         self.mouse_rel: tuple[int, int]
         self.mouse_press: tuple[bool, bool, bool]
-        self.key_press: pygame.key.ScancodeWrapper
 
         self.ecs_manager: ECSManager
 
@@ -39,7 +39,13 @@ class App:
         self.mouse_pos = pygame.mouse.get_pos()
         self.mouse_rel = pygame.mouse.get_rel()
         self.mouse_press = pygame.mouse.get_pressed()
-        self.key_press = pygame.key.get_pressed()
+
+        entity_id = list(self.ecs_manager.query_all_exist(Keyboard))[0]
+        keyboard = cast(
+            Keyboard, self.ecs_manager.fetch_components(entity_id, Keyboard)[Keyboard]
+        )
+
+        keyboard._keys = pygame.key.get_pressed()
 
     def _update_display(self) -> None:
         pygame.display.update()
@@ -63,10 +69,6 @@ class App:
         pass
 
     def loop(self) -> None:
-        if self.key_press[pygame.K_ESCAPE]:
-            pygame.quit()
-            quit(0)
-
         self.ecs_manager.run_systems()
 
     def _render(self) -> None:

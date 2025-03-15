@@ -84,8 +84,6 @@ class ECSManager:
     def fetch_components(
         self, entity_id: EntityId, *components: Type[Component]
     ) -> dict[Type[Component], Component]:
-        print(entity_id, *components)
-
         if entity_id not in self.entities:
             return {}
 

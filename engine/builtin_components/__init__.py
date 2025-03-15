@@ -1,6 +1,7 @@
 from .collision import Collision
 from .follow import FollowPlayer
 from .health import Health
+from .keyboard import Keyboard
 from .motion import Motion
 from .name import Name
 from .player import Player
