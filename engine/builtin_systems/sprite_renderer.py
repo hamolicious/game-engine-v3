@@ -8,14 +8,16 @@ from ..system import system
 
 @system
 def sprite_renderer(ecs: ECSManager) -> None:
-    display = ecs.fetch_only_one(Display)
+    display = ecs.get_single_component(Display)
     entities = list(
-        ecs.query_all_exist(builtin_components.Sprite, builtin_components.Transform2D)
+        ecs.find_entity_with_components(
+            builtin_components.Sprite, builtin_components.Transform2D
+        )
     )
 
     renderables = []
     for entity_id in entities:
-        comps = ecs.fetch_components(
+        comps = ecs.fetch_components_from_entity(
             entity_id, builtin_components.Sprite, builtin_components.Transform2D
         )
 

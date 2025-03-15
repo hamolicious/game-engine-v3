@@ -7,7 +7,7 @@ from ..system import system
 
 @system
 def exit_on_esc(ecs: ECSManager) -> None:
-    keyboard = ecs.fetch_only_one(Keyboard)
+    keyboard = ecs.get_single_component(Keyboard)
 
     if keyboard._keys[pygame.K_ESCAPE]:
         pygame.quit()

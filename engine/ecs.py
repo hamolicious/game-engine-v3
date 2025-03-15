@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from hashlib import md5
 from time import time
-from typing import Callable, Generator, Type, TypeVar, TypeVarTuple, cast
+from typing import Callable, Generator, Type, TypeVar, TypeVarTuple, Unpack, cast
 
 from engine.component import Component
 from engine.entity import Entity, EntityId
@@ -80,7 +80,7 @@ class ECSManager:
 
         return True
 
-    def query_all_exist(
+    def find_entity_with_components(
         self, *component_types: type[Component]
     ) -> Generator[EntityId, None, None]:
         comp_list = list(component_types)
@@ -88,12 +88,12 @@ class ECSManager:
             if self.has_map.has(entity_id, *comp_list):
                 yield entity_id
 
-    def fetch_only_one(self, component: Type[T]) -> T:
-        ids = list(self.query_all_exist(component))
+    def get_single_component(self, component: Type[T]) -> T:
+        ids = list(self.find_entity_with_components(component))
         assert len(ids) == 1, f"Found more than 1 instance! {component=}"
-        return cast(T, self.fetch_components(ids[0], component)[component])
+        return cast(T, self.fetch_components_from_entity(ids[0], component)[component])
 
-    def fetch_components(
+    def fetch_components_from_entity(
         self, entity_id: EntityId, *components: Type[Component]
     ) -> dict[Type[Component], Component]:
         if entity_id not in self.entities:
@@ -103,10 +103,12 @@ class ECSManager:
         comp_set = set(components)
         return {type(k): k for k in ent._components if type(k) in comp_set}
 
-    def add_component(self, entity_id: EntityId, component: Component) -> None:
+    def add_component_to_entity(
+        self, entity_id: EntityId, component: Component
+    ) -> None:
         self.entities[entity_id]._components.append(component)
 
-    def remove_component(
+    def remove_component_from_entity(
         self, entity_id: EntityId, component_type: Type[Component]
     ) -> bool:
         value = list(

@@ -30,14 +30,15 @@ class BopUpandDown(Component):
 
 @system
 def bop_up_and_down(ecs: ECSManager) -> None:
-    entity_ids = ecs.query_all_exist(BopUpandDown)
+    entity_ids = ecs.find_entity_with_components(BopUpandDown)
 
     for bop in entity_ids:
         bop_comp = cast(
-            BopUpandDown, ecs.fetch_components(bop, BopUpandDown)[BopUpandDown]
+            BopUpandDown,
+            ecs.fetch_components_from_entity(bop, BopUpandDown)[BopUpandDown],
         )
         transform = cast(
-            Transform2D, ecs.fetch_components(bop, Transform2D)[Transform2D]
+            Transform2D, ecs.fetch_components_from_entity(bop, Transform2D)[Transform2D]
         )
 
         t = os_time.time() - bop_comp.start_time

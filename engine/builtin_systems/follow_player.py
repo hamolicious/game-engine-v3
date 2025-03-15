@@ -8,18 +8,20 @@ from ..system import system
 
 @system
 def follow_player(ecs: ECSManager) -> None:
-    time = ecs.fetch_only_one(Time)
-    player = list(ecs.query_all_exist(Player))[0]
+    time = ecs.get_single_component(Time)
+    player = list(ecs.find_entity_with_components(Player))[0]
     player_transform = cast(
-        Transform2D, ecs.fetch_components(player, Transform2D)[Transform2D]
+        Transform2D, ecs.fetch_components_from_entity(player, Transform2D)[Transform2D]
     )
 
-    for other in ecs.query_all_exist(Transform2D, FollowPlayer):
+    for other in ecs.find_entity_with_components(Transform2D, FollowPlayer):
         other_transform = cast(
-            Transform2D, ecs.fetch_components(other, Transform2D)[Transform2D]
+            Transform2D,
+            ecs.fetch_components_from_entity(other, Transform2D)[Transform2D],
         )
         follow_player = cast(
-            FollowPlayer, ecs.fetch_components(other, FollowPlayer)[FollowPlayer]
+            FollowPlayer,
+            ecs.fetch_components_from_entity(other, FollowPlayer)[FollowPlayer],
         )
 
         dist_sqr = other_transform.world_position.distance_squared_to(

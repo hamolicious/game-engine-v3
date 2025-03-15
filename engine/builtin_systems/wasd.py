@@ -10,14 +10,14 @@ from ..system import system
 
 @system
 def simple_wasd(ecs: ECSManager) -> None:
-    keyboard = ecs.fetch_only_one(Keyboard)
-    time = ecs.fetch_only_one(Time)
+    keyboard = ecs.get_single_component(Keyboard)
+    time = ecs.get_single_component(Time)
 
-    player = list(ecs.query_all_exist(Player))[0]
+    player = list(ecs.find_entity_with_components(Player))[0]
     player_transform = cast(
-        Transform2D, ecs.fetch_components(player, Transform2D)[Transform2D]
+        Transform2D, ecs.fetch_components_from_entity(player, Transform2D)[Transform2D]
     )
-    motion = cast(Motion, ecs.fetch_components(player, Motion)[Motion])
+    motion = cast(Motion, ecs.fetch_components_from_entity(player, Motion)[Motion])
 
     vel = pygame.Vector2()
     if keyboard._keys[pygame.K_w]:

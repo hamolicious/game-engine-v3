@@ -31,7 +31,7 @@ class App:
         self.screen.fill([255, 255, 255])
         pygame.display.set_icon(self.screen)
 
-        display = self.ecs_manager.fetch_only_one(Display)
+        display = self.ecs_manager.get_single_component(Display)
         display.surface = self.screen
         display.width, display.height = self.screen.get_size()
 
@@ -47,7 +47,7 @@ class App:
         self.mouse_press = pygame.mouse.get_pressed()
         self.key_press = pygame.key.get_pressed()
 
-        keyboard = self.ecs_manager.fetch_only_one(Keyboard)
+        keyboard = self.ecs_manager.get_single_component(Keyboard)
         keyboard._keys = self.key_press
 
     def _update_display(self) -> None:
@@ -56,7 +56,7 @@ class App:
         self.actual_fps = self.clock.get_fps()
         pygame.display.set_caption(f"Framerate: {int(self.actual_fps)}")
 
-        time = self.ecs_manager.fetch_only_one(Time)
+        time = self.ecs_manager.get_single_component(Time)
         time.delta_time = self.delta_time
         time.fps = self.actual_fps
 

@@ -5,7 +5,8 @@ ECS game engine. Built to be easily customised and quick to iterate on ideas.
 ## Dev Notes
 
 - [ ] improve general fetching flow
-- [ ] export `App` as a resource in case more in depth/under the hood changes are needed
+- [ ] ~export `App` as a resource in case more in depth/under the hood changes are needed~
+  - [x] Display is now a resource
 - [x] Add sine wave flowy bop up down thingie mabob
   - [ ] Square wave
   - [ ] Triangle wave
