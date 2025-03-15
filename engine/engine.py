@@ -11,6 +11,8 @@ class Engine:
         # TODO: control screen size and whatnot with a special component? 🤔😲
         self._app = App()
 
+        self._register_setup_entities()
+
     def _register_setup_entities(self) -> None:
         for entity in self.setup():
             self._ecs_manager.create_entity(Entity(*entity._components))

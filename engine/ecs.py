@@ -30,6 +30,7 @@ class _HasComponentMap:
     def set_components(self, entity_id: EntityId, *components: Type[Component]) -> None:
         curr_map = self._map.get(entity_id, set())
         self._map[entity_id] = curr_map | set(components)
+        return
 
 
 class ECSManager:
@@ -48,7 +49,27 @@ class ECSManager:
         new_id = self._generate_entity_id()
         self.entities[new_id] = entity
         self.has_map.set_components(new_id, *map(lambda i: type(i), entity._components))
+
+        for comp in entity._components:
+            ct = type(comp)
+            if ct not in self.components:
+                self.components[ct] = set()
+
+            self.components[ct].add(new_id)
+
         return new_id
+
+    def remove_entity(self, entity_id: EntityId) -> bool:
+        if entity_id not in self.entities:
+            return False
+
+        del self.entities[entity_id]
+        self.has_map.remove_entity(entity_id)
+
+        for comp in self.entities[entity_id]._components:
+            self.components[type(comp)].remove(entity_id)
+
+        return True
 
     def query_all_exist(
         self, *component_types: type[Component]
@@ -61,21 +82,14 @@ class ECSManager:
     def fetch_components(
         self, entity_id: EntityId, *components: Type[Component]
     ) -> dict[Type[Component], Component]:
+        print(entity_id, *components)
+
         if entity_id not in self.entities:
             return {}
 
         ent = self.entities[entity_id]
         comp_set = set(components)
-        return {type(k): k for k in ent._components if k in comp_set}
-
-    def remove_entity(self, entity_id: EntityId) -> bool:
-        if entity_id not in self.entities:
-            return False
-
-        del self.entities[entity_id]
-        self.has_map.remove_entity(entity_id)
-
-        return True
+        return {type(k): k for k in ent._components if type(k) in comp_set}
 
     def add_component(self, entity_id: EntityId, component: Component) -> None:
         self.entities[entity_id]._components.append(component)

@@ -1,6 +1,7 @@
 from typing import Generic, Self, TypeVar, cast
 
 from pygame import Vector2, Vector3
+from pygame.image import load
 
 from ..component import Component
 
@@ -11,11 +12,11 @@ T = TypeVar(
 
 
 class Transform(Generic[T]):
-    def __init__(self) -> None:
-        self._world_pos: T
-        self._local_pos: T
-        self._size: T
-        self._rot: float
+    def __init__(self, *, world_pos: T, local_pos: T, size: T, rot: float) -> None:
+        self._world_pos: T = world_pos
+        self._local_pos: T = local_pos
+        self._size: T = size
+        self._rot: float = rot
 
     def set_world_position(self, new_pos: T) -> Self:
         self._world_pos = cast(T, new_pos.copy())
@@ -39,8 +40,12 @@ class Transform(Generic[T]):
 
 
 class Transform2D(Transform[Vector2], Component):
-    pass
-
-
-class Transform3D(Transform[Vector3], Component):
-    pass
+    def __init__(
+        self,
+        *,
+        world_pos: Vector2 = Vector2(0, 0),
+        local_pos: Vector2 = Vector2(0, 0),
+        size: Vector2 = Vector2(1, 1),
+        rot: float = 0,
+    ) -> None:
+        super().__init__(world_pos=world_pos, local_pos=local_pos, size=size, rot=rot)

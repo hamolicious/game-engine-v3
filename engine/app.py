@@ -1,3 +1,5 @@
+from typing import cast
+
 import pygame
 
 from engine import builtin_components
@@ -65,13 +67,23 @@ class App:
             pygame.quit()
             quit(0)
 
+        self.ecs_manager.run_systems()
+
     def _render(self) -> None:
-        for entity_id in self.ecs_manager.query_all_exist(
-            builtin_components.Sprite, builtin_components.Transform2D
-        ):
+        entities = list(
+            self.ecs_manager.query_all_exist(
+                builtin_components.Sprite, builtin_components.Transform2D
+            )
+        )
+
+        for entity_id in entities:
             comps = self.ecs_manager.fetch_components(
                 entity_id, builtin_components.Sprite, builtin_components.Transform2D
             )
 
-            sprite = comps[builtin_components.Sprite]
-            transform = comps[builtin_components.Transform2D]
+            sprite = cast(builtin_components.Sprite, comps[builtin_components.Sprite])
+            transform = cast(
+                builtin_components.Transform2D, comps[builtin_components.Transform2D]
+            )
+
+            self.screen.blit(sprite.surf, transform.world_position.xy)
