@@ -4,8 +4,7 @@ from typing import Generator, cast
 
 from pygame import Vector2
 
-from engine import Engine, builtin_components, builtin_systems
-from engine.builtin_components.transform import Transform2D
+from engine import Engine, builtin_components, builtin_renderers, builtin_systems
 from engine.component import Component
 from engine.ecs import ECSManager
 from engine.entity import Entity
@@ -38,7 +37,10 @@ def bop_up_and_down(ecs: ECSManager) -> None:
             ecs.fetch_components_from_entity(bop, BopUpandDown)[BopUpandDown],
         )
         transform = cast(
-            Transform2D, ecs.fetch_components_from_entity(bop, Transform2D)[Transform2D]
+            builtin_components.Transform2D,
+            ecs.fetch_components_from_entity(bop, builtin_components.Transform2D)[
+                builtin_components.Transform2D
+            ],
         )
 
         t = os_time.time() - bop_comp.start_time
@@ -68,17 +70,35 @@ class Game(Engine):
                 width=1000,
                 height=700,
             ),
+            builtin_renderers.SpriteRenderer(),
         )
 
         yield Entity(
             builtin_components.Player(),
-            builtin_components.Transform2D(world_pos=Vector2(200, 200)),
+            builtin_components.Transform2D(world_pos=Vector2(200, 200), z=1),
             builtin_components.Motion(),
             builtin_components.SpriteSheet(
                 src="./assets/BODY_male.png",
                 x_count=9,
                 y_count=4,
             ),
+            builtin_components.Animation(
+                current_animation="walk-down",
+                animations={
+                    "walk-down": (
+                        (0, 2),
+                        (1, 2),
+                        (2, 2),
+                        (3, 2),
+                        (4, 2),
+                        (5, 2),
+                        (6, 2),
+                        (7, 2),
+                        (8, 2),
+                    )
+                },
+            ),
+            builtin_renderers.AnimationRenderer(),
             builtin_components.Collision(),
             builtin_components.Health(),
             builtin_components.WASD(),
@@ -92,6 +112,7 @@ class Game(Engine):
                 width=50,
                 height=50,
             ),
+            builtin_renderers.SpriteRenderer(),
             builtin_components.Collision(),
         )
 
@@ -107,4 +128,5 @@ class Game(Engine):
             builtin_components.Health(),
             builtin_components.FollowPlayer(),
             BopUpandDown(),
+            builtin_renderers.SpriteRenderer(),
         )

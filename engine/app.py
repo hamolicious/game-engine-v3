@@ -3,13 +3,12 @@ from typing import cast
 
 import pygame
 
-from engine import builtin_components
-from engine.internal_components import Keyboard, Time
-from engine.internal_components.display import Display
-from engine.metrics import Metrics
-from engine.types import Stages
-
+from . import builtin_components, builtin_renderers
 from .ecs import ECSManager
+from .internal_components import Keyboard, Time
+from .internal_components.display import Display
+from .metrics import Metrics
+from .types import Stages
 
 
 class App:
@@ -26,6 +25,7 @@ class App:
         self.mouse_press: tuple[bool, bool, bool]
 
         self.ecs_manager: ECSManager
+        self.render_jobs: list[builtin_renderers.RenderJob] = []
 
     def _init_pygame(self) -> None:
         pygame.init()
@@ -88,7 +88,68 @@ class App:
 
     def _render(self) -> None:
         start = time()
-        self.ecs_manager.run_systems(Stages.RENDER)
+
+        camera_ids = tuple(
+            self.ecs_manager.find_entity_with_components(
+                builtin_components.Camera, builtin_components.Transform2D
+            )
+        )
+
+        renderers = tuple(builtin_renderers.Renderer.__subclasses__())
+        self.render_jobs = []
+
+        for camera_id in camera_ids:
+            for renderer in renderers:
+                entity_ids = tuple(
+                    self.ecs_manager.find_entity_with_components(*renderer.DEPENDENCIES)
+                )
+
+                camera = self.ecs_manager.fetch_single_component_from_entity(
+                    camera_id, builtin_components.Camera
+                )
+                camera_transform = self.ecs_manager.fetch_single_component_from_entity(
+                    camera_id, builtin_components.Transform2D
+                )
+                camera_world_rect = pygame.Rect(
+                    camera_transform.world_position.xy, (camera.width, camera.height)
+                )
+
+                for entity_id in entity_ids:
+                    entity_transform = (
+                        self.ecs_manager.fetch_single_component_from_entity(
+                            entity_id, builtin_components.Transform2D
+                        )
+                    )
+                    entity_world_rect = pygame.Rect(
+                        entity_transform.world_position.xy, entity_transform.size.xy
+                    )
+
+                    self.render_jobs.append(
+                        builtin_renderers.RenderJob(
+                            camera,
+                            camera_transform,
+                            entity_id,
+                            entity_transform.z,
+                            renderer,
+                        )
+                    )
+        self.render_jobs = sorted(self.render_jobs, key=lambda r: r.z)
+        for rj in self.render_jobs:
+            entity_renderer = self.ecs_manager.fetch_single_component_from_entity(
+                rj.entity_id, rj.renderer
+            )
+
+            print(rj.entity_id)
+            entity_renderer._render(
+                rj,
+                self.ecs_manager.fetch_components_from_entity(
+                    rj.entity_id,
+                    *rj.renderer.DEPENDENCIES,
+                    builtin_components.Transform2D,
+                ),
+            )
+        self.render_jobs = []
+
         Metrics.TOTAL_RENDER_TIME.set_value((time() - start) * 1000)
 
     def _draw(self) -> None:

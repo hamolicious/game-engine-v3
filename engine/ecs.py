@@ -53,7 +53,6 @@ class ECSManager:
         self.systems: dict[Stages, list[Callable[[ECSManager], None]]] = {
             Stages.SETUP: [],
             Stages.UPDATE: [],
-            Stages.RENDER: [],
             Stages.DRAW: [],
         }
 
@@ -104,6 +103,13 @@ class ECSManager:
         ent = self.entities[entity_id]
         comp_set = set(components)
         return {type(k): k for k in ent._components if type(k) in comp_set}
+
+    def fetch_single_component_from_entity(
+        self, entity_id: EntityId, component: Type[T]
+    ) -> T:
+        return cast(
+            T, self.fetch_components_from_entity(entity_id, component)[component]
+        )
 
     def add_component_to_entity(
         self, entity_id: EntityId, component: Component

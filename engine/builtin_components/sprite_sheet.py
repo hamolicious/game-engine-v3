@@ -49,12 +49,11 @@ class SpriteSheet(Component):
                     pygame.Surface((self.each_width, self.each_height), pygame.SRCALPHA)
                 )
 
-                # TODO: this is wrong
                 row_arr[-1].blit(
                     self.surf,
                     (
-                        col * self.each_width,
-                        row * self.each_height,
+                        -col * self.each_width,
+                        -row * self.each_height,
                         self.each_width,
                         self.each_height,
                     ),
