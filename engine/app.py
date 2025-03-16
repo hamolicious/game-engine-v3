@@ -50,7 +50,7 @@ class App:
         self.key_press = pygame.key.get_pressed()
 
         keyboard = self.ecs_manager.get_single_component(Keyboard)
-        keyboard._keys = self.key_press
+        keyboard.keys = self.key_press
 
     def _update_display(self) -> None:
         pygame.display.update()

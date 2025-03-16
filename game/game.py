@@ -2,13 +2,19 @@ import math
 import time as os_time
 from typing import Generator, cast
 
+import pygame
 from pygame import Vector2
 
-from engine import Engine, builtin_components, builtin_renderers, builtin_systems
+from engine import (
+    Engine,
+    builtin_components,
+    builtin_renderers,
+    builtin_systems,
+    internal_components,
+)
 from engine.component import Component
 from engine.ecs import ECSManager
 from engine.entity import Entity
-from engine.internal_components.time import Time
 from engine.system import system
 
 
@@ -137,12 +143,20 @@ class Game(Engine):
             builtin_renderers.AnimationRenderer(),
             builtin_components.Collision(),
             builtin_components.Health(),
-            builtin_components.WASD(),
+            builtin_components.WASD(
+                key_to_animation_map={
+                    "": "idle",
+                    "W": "walk-up",
+                    "A": "walk-left",
+                    "S": "walk-down",
+                    "D": "walk-right",
+                }
+            ),
         )
 
         yield Entity(
             builtin_components.Name("Log"),
-            builtin_components.Transform2D(world_pos=Vector2(300, 500)),
+            builtin_components.Transform2D(world_pos=Vector2(300, 500), z=-0.5),
             builtin_components.Sprite(
                 src="./assets/wood log sprite sheet.png",
                 width=50,

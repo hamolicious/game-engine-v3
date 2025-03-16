@@ -24,9 +24,12 @@ def animation(ecs: ECSManager) -> None:
             continue
 
         current_animation = animation.current_animation
-        current_index = animation.animations[current_animation].index(
-            animation.current_frame
-        )
+        if animation.current_frame not in animation.animations[current_animation]:
+            current_index = 0
+        else:
+            current_index = animation.animations[current_animation].index(
+                animation.current_frame
+            )
 
         new_index = current_index + 1
         if new_index >= len(animation.animations[current_animation]):
