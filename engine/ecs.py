@@ -4,7 +4,7 @@ from hashlib import md5
 from time import time
 from typing import Callable, Generator, Type, TypeVar, TypeVarTuple, Unpack, cast
 
-from engine.component import Component
+from engine.component import Component, ComponentTemplate
 from engine.entity import Entity, EntityId
 from engine.types import Stages
 
@@ -81,16 +81,37 @@ class ECSManager:
 
         return True
 
-    def find_entity_with_components(
+    def find_entities_with_all_components(
         self, *component_types: type[Component]
     ) -> Generator[EntityId, None, None]:
-        comp_list = list(component_types)
-        for entity_id in self.components.get(comp_list[0], set()):
-            if self.has_map.has(entity_id, *comp_list):
-                yield entity_id
+        all_of = list(component_types)
+        sets = []
+        for type_ in all_of:
+            sets.append(self.components[type_])
+
+        yield from set.intersection(*sets)
+
+    def find_entities_with_any_of_components(
+        self, *component_types: type[Component]
+    ) -> Generator[EntityId, None, None]:
+        any_of = list(component_types)
+
+        for type_ in any_of:
+            yield from self.components[type_]
+
+    def find_any_variation_on_entity(
+        self, entity_id: EntityId, component_template: type[ComponentTemplate]
+    ) -> type[ComponentTemplate] | None:
+        for type_ in component_template.all_variations():
+            if (
+                self.components.get(type_) is not None
+                and entity_id in self.components[type_]
+            ):
+                return type_
+        return None
 
     def get_single_component(self, component: Type[T]) -> T:
-        ids = list(self.find_entity_with_components(component))
+        ids = list(self.find_entities_with_all_components(component))
         assert len(ids) == 1, f"Found more than 1 instance! {component=}"
         return cast(T, self.fetch_components_from_entity(ids[0], component)[component])
 

@@ -90,7 +90,7 @@ class App:
         start = time()
 
         camera_ids = tuple(
-            self.ecs_manager.find_entity_with_components(
+            self.ecs_manager.find_entities_with_all_components(
                 builtin_components.Camera, builtin_components.Transform2D
             )
         )
@@ -101,7 +101,9 @@ class App:
         for camera_id in camera_ids:
             for renderer in renderers:
                 entity_ids = tuple(
-                    self.ecs_manager.find_entity_with_components(*renderer.DEPENDENCIES)
+                    self.ecs_manager.find_entities_with_all_components(
+                        *renderer.DEPENDENCIES
+                    )
                 )
 
                 camera = self.ecs_manager.fetch_single_component_from_entity(
@@ -139,7 +141,6 @@ class App:
                 rj.entity_id, rj.renderer
             )
 
-            print(rj.entity_id)
             entity_renderer._render(
                 rj,
                 self.ecs_manager.fetch_components_from_entity(

@@ -29,7 +29,7 @@ class BopUpandDown(Component):
 
 @system
 def bop_up_and_down(ecs: ECSManager) -> None:
-    entity_ids = ecs.find_entity_with_components(BopUpandDown)
+    entity_ids = ecs.find_entities_with_all_components(BopUpandDown)
 
     for bop in entity_ids:
         bop_comp = cast(
@@ -76,15 +76,16 @@ class Game(Engine):
         yield Entity(
             builtin_components.Player(),
             builtin_components.Transform2D(world_pos=Vector2(200, 200), z=1),
-            builtin_components.Motion(),
+            builtin_components.DirectMotion(),
             builtin_components.SpriteSheet(
                 src="./assets/BODY_male.png",
                 x_count=9,
                 y_count=4,
             ),
             builtin_components.Animation(
-                current_animation="walk-down",
+                current_animation="idle",
                 animations={
+                    "idle": ((0, 2),),
                     "walk-down": (
                         (0, 2),
                         (1, 2),
@@ -95,7 +96,40 @@ class Game(Engine):
                         (6, 2),
                         (7, 2),
                         (8, 2),
-                    )
+                    ),
+                    "walk-up": (
+                        (0, 0),
+                        (1, 0),
+                        (2, 0),
+                        (3, 0),
+                        (4, 0),
+                        (5, 0),
+                        (6, 0),
+                        (7, 0),
+                        (8, 0),
+                    ),
+                    "walk-down-left": (
+                        (0, 1),
+                        (1, 1),
+                        (2, 1),
+                        (3, 1),
+                        (4, 1),
+                        (5, 1),
+                        (6, 1),
+                        (7, 1),
+                        (8, 1),
+                    ),
+                    "walk-down-right": (
+                        (0, 3),
+                        (1, 3),
+                        (2, 3),
+                        (3, 3),
+                        (4, 3),
+                        (5, 3),
+                        (6, 3),
+                        (7, 3),
+                        (8, 3),
+                    ),
                 },
             ),
             builtin_renderers.AnimationRenderer(),
@@ -119,7 +153,7 @@ class Game(Engine):
         yield Entity(
             builtin_components.Name("Orb"),
             builtin_components.Transform2D(world_pos=Vector2(150, 150)),
-            builtin_components.Motion(),
+            builtin_components.DirectMotion(),
             builtin_components.Sprite(
                 src="./assets/orb.png",
                 width=25,

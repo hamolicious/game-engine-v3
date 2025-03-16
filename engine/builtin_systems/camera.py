@@ -13,7 +13,9 @@ from ..system import system
 @system
 def setup_cameras(ecs: ECSManager) -> None:
     display = ecs.get_single_component(internal_components.Display)
-    cameras_ids = tuple(ecs.find_entity_with_components(builtin_components.Camera))
+    cameras_ids = tuple(
+        ecs.find_entities_with_all_components(builtin_components.Camera)
+    )
 
     for camid in cameras_ids:
         camera = cast(
@@ -37,7 +39,7 @@ def setup_cameras(ecs: ECSManager) -> None:
 def camera(ecs: ECSManager) -> None:
     display = ecs.get_single_component(Display)
     current_camera_id = tuple(
-        ecs.find_entity_with_components(
+        ecs.find_entities_with_all_components(
             builtin_components.Camera, builtin_components.Camera.Current
         )
     )

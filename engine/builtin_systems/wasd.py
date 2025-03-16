@@ -2,7 +2,9 @@ from typing import cast
 
 import pygame
 
-from ..builtin_components import Motion, Player, Transform2D
+from engine import builtin_components
+
+from ..builtin_components import BaseMotion, Player, Transform2D
 from ..ecs import ECSManager
 from ..internal_components import Keyboard, Time
 from ..system import system
@@ -13,11 +15,15 @@ def simple_wasd(ecs: ECSManager) -> None:
     keyboard = ecs.get_single_component(Keyboard)
     time = ecs.get_single_component(Time)
 
-    player = list(ecs.find_entity_with_components(Player))[0]
-    player_transform = cast(
-        Transform2D, ecs.fetch_components_from_entity(player, Transform2D)[Transform2D]
+    player = list(ecs.find_entities_with_all_components(Player))[0]
+    motion_system = ecs.find_any_variation_on_entity(player, BaseMotion)
+    if motion_system is None:
+        print("No motion")
+        return
+
+    motion = cast(
+        BaseMotion, ecs.fetch_single_component_from_entity(player, motion_system)
     )
-    motion = cast(Motion, ecs.fetch_components_from_entity(player, Motion)[Motion])
 
     vel = pygame.Vector2()
     if keyboard._keys[pygame.K_w]:
@@ -36,6 +42,4 @@ def simple_wasd(ecs: ECSManager) -> None:
         return
 
     vel.normalize_ip()
-    player_transform.set_world_position(
-        player_transform.world_position + (vel * motion.speed * time.delta_time)
-    )
+    motion.velocity = vel * motion.speed * time.delta_time
