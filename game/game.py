@@ -79,7 +79,7 @@ class Game(Engine):
                 (7, 0),
                 (8, 0),
             ),
-            "walk-down-left": (
+            "walk-left": (
                 (0, 1),
                 (1, 1),
                 (2, 1),
@@ -90,7 +90,7 @@ class Game(Engine):
                 (7, 1),
                 (8, 1),
             ),
-            "walk-down-right": (
+            "walk-right": (
                 (0, 3),
                 (1, 3),
                 (2, 3),
