@@ -7,5 +7,7 @@ from .name import Name
 from .player import Player
 from .sprite import Sprite
 from .sprite_renderer import SpriteRenderer
+from .sprite_sheet import SpriteSheet
+from .spritesheet_renderer import SpriteSheetRenderer
 from .transform import Transform2D
 from .wasd import WASD

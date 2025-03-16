@@ -74,10 +74,10 @@ class Game(Engine):
             builtin_components.Player(),
             builtin_components.Transform2D(world_pos=Vector2(200, 200)),
             builtin_components.Motion(),
-            builtin_components.Sprite(
-                src="./assets/player-single.png",
-                width=50,
-                height=50,
+            builtin_components.SpriteSheet(
+                src="./assets/BODY_male.png",
+                x_count=9,
+                y_count=4,
             ),
             builtin_components.Collision(),
             builtin_components.Health(),

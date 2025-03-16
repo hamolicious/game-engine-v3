@@ -54,6 +54,10 @@ class Engine:
         self._ecs_manager.register_system(
             builtin_systems.sprite_renderer, Stages.RENDER
         )
+        self._ecs_manager.register_system(
+            builtin_systems.spritesheet_renderer, Stages.RENDER
+        )
+
         self._ecs_manager.register_system(builtin_systems.camera, Stages.DRAW)
 
     def run(self) -> None:
