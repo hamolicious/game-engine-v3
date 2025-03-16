@@ -83,14 +83,9 @@ class ECSManager:
         return True
 
     def find_entities_with_all_components(
-        self, *component_types: type[Component]
+        self, *all_of: type[Component]
     ) -> Generator[EntityId, None, None]:
-        all_of = list(component_types)
-        sets = []
-        for type_ in all_of:
-            sets.append(self.components[type_])
-
-        yield from set.intersection(*sets)
+        yield from set.intersection(*[self.components[type_] for type_ in all_of])
 
     def find_entities_with_any_of_components(
         self, *component_types: type[Component]
@@ -125,8 +120,7 @@ class ECSManager:
             return {}
 
         ent = self.entities[entity_id]
-        comp_set = set(components)
-        return {type(k): k for k in ent._components if type(k) in comp_set}
+        return {type(k): k for k in ent._components if type(k) in set(components)}
 
     def fetch_single_component_from_entity(
         self, entity_id: EntityId, component: Type[T]
