@@ -48,6 +48,7 @@ class Engine:
         self._ecs_manager.register_system(builtin_systems.setup_cameras, Stages.SETUP)
 
         self._ecs_manager.register_system(builtin_systems.animation, Stages.UPDATE)
+        self._ecs_manager.register_system(builtin_systems.wandering, Stages.UPDATE)
         self._ecs_manager.register_system(builtin_systems.motion, Stages.UPDATE)
         self._ecs_manager.register_system(builtin_systems.exit_on_esc, Stages.UPDATE)
         self._ecs_manager.register_system(builtin_systems.follow_player, Stages.UPDATE)

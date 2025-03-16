@@ -9,4 +9,5 @@ from .player import Player
 from .sprite import Sprite
 from .sprite_sheet import SpriteSheet
 from .transform import Transform2D
+from .wandering import Wandering
 from .wasd import WASD

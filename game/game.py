@@ -55,6 +55,54 @@ def bop_up_and_down(ecs: ECSManager) -> None:
 
 class Game(Engine):
     def setup(self) -> Generator[Entity, None, None]:
+        lpc_walkcycle = {
+            "idle": ((0, 2),),
+            "walk-down": (
+                (0, 2),
+                (1, 2),
+                (2, 2),
+                (3, 2),
+                (4, 2),
+                (5, 2),
+                (6, 2),
+                (7, 2),
+                (8, 2),
+            ),
+            "walk-up": (
+                (0, 0),
+                (1, 0),
+                (2, 0),
+                (3, 0),
+                (4, 0),
+                (5, 0),
+                (6, 0),
+                (7, 0),
+                (8, 0),
+            ),
+            "walk-down-left": (
+                (0, 1),
+                (1, 1),
+                (2, 1),
+                (3, 1),
+                (4, 1),
+                (5, 1),
+                (6, 1),
+                (7, 1),
+                (8, 1),
+            ),
+            "walk-down-right": (
+                (0, 3),
+                (1, 3),
+                (2, 3),
+                (3, 3),
+                (4, 3),
+                (5, 3),
+                (6, 3),
+                (7, 3),
+                (8, 3),
+            ),
+        }
+
         self._ecs_manager.register_system(bop_up_and_down)
 
         yield Entity(
@@ -84,53 +132,7 @@ class Game(Engine):
             ),
             builtin_components.Animation(
                 current_animation="idle",
-                animations={
-                    "idle": ((0, 2),),
-                    "walk-down": (
-                        (0, 2),
-                        (1, 2),
-                        (2, 2),
-                        (3, 2),
-                        (4, 2),
-                        (5, 2),
-                        (6, 2),
-                        (7, 2),
-                        (8, 2),
-                    ),
-                    "walk-up": (
-                        (0, 0),
-                        (1, 0),
-                        (2, 0),
-                        (3, 0),
-                        (4, 0),
-                        (5, 0),
-                        (6, 0),
-                        (7, 0),
-                        (8, 0),
-                    ),
-                    "walk-down-left": (
-                        (0, 1),
-                        (1, 1),
-                        (2, 1),
-                        (3, 1),
-                        (4, 1),
-                        (5, 1),
-                        (6, 1),
-                        (7, 1),
-                        (8, 1),
-                    ),
-                    "walk-down-right": (
-                        (0, 3),
-                        (1, 3),
-                        (2, 3),
-                        (3, 3),
-                        (4, 3),
-                        (5, 3),
-                        (6, 3),
-                        (7, 3),
-                        (8, 3),
-                    ),
-                },
+                animations=lpc_walkcycle,
             ),
             builtin_renderers.AnimationRenderer(),
             builtin_components.Collision(),
@@ -148,6 +150,30 @@ class Game(Engine):
             ),
             builtin_renderers.SpriteRenderer(),
             builtin_components.Collision(),
+        )
+
+        yield Entity(
+            builtin_components.Name("Idle Enemy"),
+            builtin_components.Transform2D(),
+            builtin_components.PhysicsMotion(
+                speed=2,
+                friction=2,
+            ),
+            builtin_components.Wandering(
+                origin=Vector2(300, 500),
+                min_radius=100,
+                max_radius=200,
+            ),
+            builtin_components.SpriteSheet(
+                src="./assets/BODY_skeleton.png",
+                x_count=9,
+                y_count=4,
+            ),
+            builtin_components.Animation(
+                current_animation="idle",
+                animations=lpc_walkcycle,
+            ),
+            builtin_renderers.AnimationRenderer(),
         )
 
         yield Entity(

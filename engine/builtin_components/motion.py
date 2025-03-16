@@ -21,14 +21,21 @@ class BaseMotion(ComponentTemplate):
 
     def move_to_target(
         self,
-        source_transform: Transform2D,
-        target_transform: Transform2D,
+        source_transform: Transform2D | pygame.Vector2,
+        target_transform: Transform2D | pygame.Vector2,
     ) -> None:
-        self.move_in_direction(
-            (
-                target_transform.world_position - source_transform.world_position
-            ).normalize()
+        p1 = (
+            source_transform.world_position
+            if isinstance(source_transform, Transform2D)
+            else source_transform
         )
+        p2 = (
+            target_transform.world_position
+            if isinstance(target_transform, Transform2D)
+            else target_transform
+        )
+
+        self.move_in_direction((p2 - p1).normalize())
 
 
 class DirectMotion(BaseMotion):
