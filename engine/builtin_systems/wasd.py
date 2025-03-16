@@ -16,14 +16,10 @@ def simple_wasd(ecs: ECSManager) -> None:
     time = ecs.get_single_component(Time)
 
     player = list(ecs.find_entities_with_all_components(Player))[0]
-    motion_system = ecs.find_any_variation_on_entity(player, BaseMotion)
-    if motion_system is None:
+    motion = ecs.find_any_variation_on_entity(player, BaseMotion)
+    if motion is None:
         print("No motion")
         return
-
-    motion = cast(
-        BaseMotion, ecs.fetch_single_component_from_entity(player, motion_system)
-    )
 
     vel = pygame.Vector2()
     if keyboard._keys[pygame.K_w]:

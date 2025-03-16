@@ -42,6 +42,7 @@ class _HasComponentMap:
 
 
 T = TypeVar("T", bound=Component)
+R = TypeVar("R", bound=ComponentTemplate)
 
 
 class ECSManager:
@@ -100,14 +101,16 @@ class ECSManager:
             yield from self.components[type_]
 
     def find_any_variation_on_entity(
-        self, entity_id: EntityId, component_template: type[ComponentTemplate]
-    ) -> type[ComponentTemplate] | None:
+        self, entity_id: EntityId, component_template: type[R]
+    ) -> R | None:
         for type_ in component_template.all_variations():
             if (
                 self.components.get(type_) is not None
                 and entity_id in self.components[type_]
             ):
-                return type_
+                return cast(
+                    R, self.fetch_single_component_from_entity(entity_id, type_)
+                )
         return None
 
     def get_single_component(self, component: Type[T]) -> T:

@@ -12,16 +12,12 @@ def motion(ecs: ECSManager) -> None:
     )
 
     for entity_id in entities:
-        motion_system = ecs.find_any_variation_on_entity(
+        motion = ecs.find_any_variation_on_entity(
             entity_id, builtin_components.BaseMotion
         )
-        if motion_system is None:
+        if motion is None:
             continue
 
-        motion = cast(
-            builtin_components.BaseMotion,
-            ecs.fetch_single_component_from_entity(entity_id, motion_system),
-        )
         transform = ecs.fetch_single_component_from_entity(
             entity_id, builtin_components.Transform2D
         )
