@@ -3,7 +3,7 @@ from .camera import Camera
 from .collision import Collision
 from .follow import FollowPlayer
 from .health import Health
-from .motion import BaseMotion, DirectMotion
+from .motion import BaseMotion, DirectMotion, PhysicsMotion
 from .name import Name
 from .player import Player
 from .sprite import Sprite

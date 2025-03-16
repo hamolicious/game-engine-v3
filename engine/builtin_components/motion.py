@@ -13,8 +13,22 @@ class BaseMotion(ComponentTemplate):
         self.speed = speed
         self.velocity = pygame.Vector2()
 
-    def apply(self, transform: Transform2D) -> None:
+    def apply(self, transform: Transform2D, dt: float) -> None:
         raise NotImplementedError()
+
+    def move_in_direction(self, direction: pygame.Vector2) -> None:
+        raise NotImplementedError()
+
+    def move_to_target(
+        self,
+        source_transform: Transform2D,
+        target_transform: Transform2D,
+    ) -> None:
+        self.move_in_direction(
+            (
+                target_transform.world_position - source_transform.world_position
+            ).normalize()
+        )
 
 
 class DirectMotion(BaseMotion):
@@ -27,6 +41,31 @@ class DirectMotion(BaseMotion):
 
         self.speed = speed
 
-    def apply(self, transform: Transform2D) -> None:
-        transform.set_world_position(transform.world_position + self.velocity)
+    def apply(self, transform: Transform2D, dt: float) -> None:
+        transform.set_world_position(transform.world_position + self.velocity * dt)
         self.velocity = pygame.Vector2()
+
+    def move_in_direction(self, direction: pygame.Vector2) -> None:
+        self.velocity += direction.normalize() * self.speed
+
+
+class PhysicsMotion(BaseMotion):
+    def __init__(self, *, speed: float = 5, friction: float = 2) -> None:
+        super().__init__()
+
+        self.accel = pygame.Vector2()
+        self.velocity = pygame.Vector2()
+
+        self.speed = speed
+        self.friction_multiplier = 1 - friction / 100
+
+    def apply(self, transform: Transform2D, dt: float) -> None:
+        self.velocity += self.accel
+        self.accel = pygame.Vector2()
+
+        transform.set_world_position(transform.world_position + self.velocity * dt)
+
+        self.velocity *= self.friction_multiplier
+
+    def move_in_direction(self, direction: pygame.Vector2) -> None:
+        self.accel += direction.normalize() * self.speed

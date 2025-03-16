@@ -98,7 +98,7 @@ class ECSManager:
         any_of = list(component_types)
 
         for type_ in any_of:
-            yield from self.components[type_]
+            yield from self.components.get(type_, set())
 
     def find_any_variation_on_entity(
         self, entity_id: EntityId, component_template: type[R]

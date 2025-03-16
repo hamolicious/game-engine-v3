@@ -76,7 +76,7 @@ class Game(Engine):
         yield Entity(
             builtin_components.Player(),
             builtin_components.Transform2D(world_pos=Vector2(200, 200), z=1),
-            builtin_components.DirectMotion(),
+            builtin_components.PhysicsMotion(),
             builtin_components.SpriteSheet(
                 src="./assets/BODY_male.png",
                 x_count=9,
@@ -153,7 +153,10 @@ class Game(Engine):
         yield Entity(
             builtin_components.Name("Orb"),
             builtin_components.Transform2D(world_pos=Vector2(150, 150)),
-            builtin_components.DirectMotion(),
+            builtin_components.PhysicsMotion(
+                speed=2,
+                friction=1,
+            ),
             builtin_components.Sprite(
                 src="./assets/orb.png",
                 width=25,

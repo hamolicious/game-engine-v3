@@ -13,7 +13,6 @@ from ..system import system
 @system
 def simple_wasd(ecs: ECSManager) -> None:
     keyboard = ecs.get_single_component(Keyboard)
-    time = ecs.get_single_component(Time)
 
     player = list(ecs.find_entities_with_all_components(Player))[0]
     motion = ecs.find_any_variation_on_entity(player, BaseMotion)
@@ -37,5 +36,4 @@ def simple_wasd(ecs: ECSManager) -> None:
     if vel == pygame.Vector2():
         return
 
-    vel.normalize_ip()
-    motion.velocity = vel * motion.speed * time.delta_time
+    motion.move_in_direction(vel)
