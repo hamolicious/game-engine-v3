@@ -2,9 +2,9 @@ import math
 import time as os_time
 from typing import Generator, cast
 
-import pygame
 from pygame import Vector2
 
+from .skeleton import SkeletonBrain, State as SkeletonBrainState
 from engine import (
     Engine,
     builtin_components,
@@ -173,6 +173,7 @@ class Game(Engine):
                 speed=2,
                 friction=2,
             ),
+            SkeletonBrain(SkeletonBrainState.IDLE),
             builtin_components.Wandering(
                 origin=Vector2(300, 500),
                 min_radius=100,
