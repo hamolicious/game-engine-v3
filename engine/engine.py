@@ -53,6 +53,7 @@ class Engine:
         self._ecs_manager.register_system(builtin_systems.exit_on_esc, Stages.UPDATE)
         self._ecs_manager.register_system(builtin_systems.follow_player, Stages.UPDATE)
         self._ecs_manager.register_system(builtin_systems.simple_wasd, Stages.UPDATE)
+        self._ecs_manager.register_system(builtin_systems.brain, Stages.UPDATE)
 
         self._ecs_manager.register_system(builtin_systems.camera, Stages.DRAW)
 

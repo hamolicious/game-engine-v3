@@ -1,6 +1,7 @@
 from enum import Enum, auto
 
-from engine.builtin_components import BaseBrain, state, Wandering
+from engine.builtin_components import FiniteStateMachine, state
+from engine.builtin_components.transform import Transform2D
 
 
 class State(Enum):
@@ -8,13 +9,11 @@ class State(Enum):
     RESTING = auto()
 
 
-class SkeletonBrain(BaseBrain):
+class SkeletonFSM(FiniteStateMachine):
     @state(State.IDLE)
-    def idle(self) -> Enum | None:
+    def idle(self, transform: Transform2D) -> Enum | None:
         return State.IDLE
 
     @state(State.RESTING)
     def resting(self) -> Enum | None:
         return State.RESTING
-
-      

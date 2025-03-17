@@ -4,7 +4,6 @@ from typing import Generator, cast
 
 from pygame import Vector2
 
-from .skeleton import SkeletonBrain, State as SkeletonBrainState
 from engine import (
     Engine,
     builtin_components,
@@ -16,6 +15,9 @@ from engine.component import Component
 from engine.ecs import ECSManager
 from engine.entity import Entity
 from engine.system import system
+
+from .skeleton import SkeletonFSM
+from .skeleton import State as SkeletonBrainState
 
 
 class BopUpandDown(Component):
@@ -173,7 +175,9 @@ class Game(Engine):
                 speed=2,
                 friction=2,
             ),
-            SkeletonBrain(SkeletonBrainState.IDLE),
+            builtin_components.Brain(
+                SkeletonFSM(SkeletonBrainState.IDLE),
+            ),
             builtin_components.Wandering(
                 origin=Vector2(300, 500),
                 min_radius=100,

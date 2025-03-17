@@ -1,5 +1,5 @@
 from .animation import Animation
-from .brain import BaseBrain, state
+from .brain import Brain, FiniteStateMachine, state
 from .camera import Camera
 from .collision import Collision
 from .follow import FollowPlayer
