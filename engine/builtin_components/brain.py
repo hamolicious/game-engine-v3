@@ -2,7 +2,7 @@ import functools
 from enum import Enum
 from typing import Callable, Generator, Generic, Self, TypeVar, get_type_hints
 
-from ..component import Component
+from ..component import Component, ComponentTemplate
 
 P = TypeVar("P")
 T = TypeVar("T", bound=Enum | Enum)
@@ -19,7 +19,7 @@ def state(handles: Enum):
     return decorator
 
 
-class BaseBrain(Component):
+class BaseBrain(ComponentTemplate):
     def __init__(self, start_state: Enum) -> None:
         self._current_state = start_state
         self._state_to_func: dict[Enum, Callable] = {}
