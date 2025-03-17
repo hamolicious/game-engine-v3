@@ -4,6 +4,7 @@ from engine.component import Component
 
 from ..builtin_components.brain import Brain
 from ..ecs import ECSManager
+from ..fsm import get_state_disable_components
 from ..system import system
 
 
@@ -26,4 +27,39 @@ def brain(ecs: ECSManager) -> None:
             an: components[ct] for an, ct in component_types.items()
         }
 
-        brain.fsm.advance(arg_name_to_component_instance)
+        if brain.fsm.is_initial_transition:
+            disable_components = get_state_disable_components(
+                brain.fsm.get_current_state_func()
+            )
+            comps = tuple(
+                ecs.fetch_components_from_entity(
+                    entity_id, *disable_components
+                ).values()
+            )
+            brain.remember(*comps)
+            ecs.remove_component_from_entity(entity_id, *map(type, comps))
+            brain.fsm.is_initial_transition = False
+
+        has_transitioned = brain.fsm.advance(arg_name_to_component_instance)
+
+        if has_transitioned:
+            disable_components = get_state_disable_components(
+                brain.fsm.get_current_state_func()
+            )
+            comps = tuple(
+                ecs.fetch_components_from_entity(
+                    entity_id, *disable_components
+                ).values()
+            )
+            ecs.add_component_to_entity(entity_id, *brain.forget())
+
+            disable_components = get_state_disable_components(
+                brain.fsm.get_current_state_func()
+            )
+            comps = tuple(
+                ecs.fetch_components_from_entity(
+                    entity_id, *disable_components
+                ).values()
+            )
+            brain.remember(*comps)
+            ecs.remove_component_from_entity(entity_id, *map(type, comps))

@@ -1,6 +1,6 @@
 from enum import Enum, auto
 
-from engine.builtin_components.transform import Transform2D
+from engine.builtin_components import Transform2D, Wandering
 from engine.fsm import FiniteStateMachine, state
 
 
@@ -10,10 +10,10 @@ class State(Enum):
 
 
 class SkeletonFSM(FiniteStateMachine):
-    @state(State.IDLE)
+    @state(handles=State.IDLE, disables=(Wandering,))
     def idle(self, transform: Transform2D) -> State:
         return State.IDLE
 
-    @state(State.RESTING)
+    @state(handles=State.RESTING)
     def resting(self) -> State:
         return State.RESTING

@@ -130,33 +130,25 @@ class ECSManager:
         )
 
     def add_component_to_entity(
-        self, entity_id: EntityId, component: Component
+        self, entity_id: EntityId, *components: Component
     ) -> None:
-        ct = type(component)
-        if ct not in self.components:
-            self.components[ct] = set()
+        for component in components:
+            ct = type(component)
+            if ct not in self.components:
+                self.components[ct] = set()
 
-        self.components[ct].add(entity_id)
-        self.has_map.add_component(entity_id, type(component))
+            self.components[ct].add(entity_id)
+            self.has_map.add_component(entity_id, type(component))
 
     def remove_component_from_entity(
-        self, entity_id: EntityId, component_type: Type[Component]
+        self, entity_id: EntityId, *component_types: Type[Component]
     ) -> bool:
-        value = list(
-            filter(
-                lambda c: type[c] == component_type,
-                self.entities[entity_id]._components,
-            )
-        )
-
-        value_len = len(value)
-        if value_len == 0:
-            return False
-        elif value_len > 1:
-            raise RuntimeError(f"wtf? {component_type=}")
-
-        self.entities[entity_id]._components.remove(value[0])
-        self.has_map.remove_components(entity_id, component_type)
+        components = self.fetch_components_from_entity(
+            entity_id, *component_types
+        ).values()
+        for component in components:
+            self.entities[entity_id]._components.remove(component)
+            self.has_map.remove_components(entity_id, type(component))
 
         return True
 
