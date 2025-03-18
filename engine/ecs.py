@@ -1,4 +1,5 @@
 from __future__ import annotations
+from engine.metrics import Metric, Metrics
 
 from hashlib import md5
 from time import time
@@ -170,4 +171,9 @@ class ECSManager:
 
     def run_systems(self, stage: Stages) -> None:
         for system in self.systems[stage]:
+            if Metrics.TOTAL_SYSTEM_TIMES.get(system.__name__) is None:
+                Metrics.TOTAL_SYSTEM_TIMES[system.__name__] = Metric(name=f'system__{system.__name__}')
+
+            Metrics.TOTAL_SYSTEM_TIMES[system.__name__].start_timer()
             system(self)
+            Metrics.TOTAL_SYSTEM_TIMES[system.__name__].end_timer()

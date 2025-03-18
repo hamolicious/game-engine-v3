@@ -1,4 +1,6 @@
-from typing import Generator, cast
+from contextlib import contextmanager
+from time import gmtime
+from typing import Any, Generator, Sequence, cast
 
 import pygame
 
@@ -6,10 +8,10 @@ from engine import builtin_systems
 from engine.internal_components import Display, Keyboard, Time
 from engine.types import Stages
 
+from engine.metrics import dump_metrics_in_csv_on_exit
 from .app import App
 from .ecs import ECSManager
 from .entity import Entity
-
 
 class Engine:
     def __init__(self) -> None:
@@ -59,7 +61,8 @@ class Engine:
         self._ecs_manager.register_system(builtin_systems.camera, Stages.DRAW)
 
     def run(self) -> None:
-        self._app.run(self._ecs_manager)
+        with dump_metrics_in_csv_on_exit():
+            self._app.run(self._ecs_manager)
 
     def setup(self) -> Generator[Entity, None, None]:
         raise NotImplementedError("Override setup")
