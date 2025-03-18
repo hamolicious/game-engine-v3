@@ -77,17 +77,18 @@ class App:
             self._update_display()
 
     def setup(self) -> None:
-        start = time()
+        Metrics.TOTAL_SETUP_TIME.start_timer()
         self.ecs_manager.run_systems(Stages.SETUP)
-        Metrics.TOTAL_SETUP_TIME.set_value((time() - start) * 1000)
+        Metrics.TOTAL_SETUP_TIME.end_timer()
 
     def loop(self) -> None:
-        start = time()
+        Metrics.TOTAL_UPDATE_TIME.start_timer()
         self.ecs_manager.run_systems(Stages.UPDATE)
-        Metrics.TOTAL_UPDATE_TIME.set_value((time() - start) * 1000)
+        Metrics.TOTAL_UPDATE_TIME.end_timer()
 
     def _render(self) -> None:
-        start = time()
+        Metrics.TOTAL_RENDER_TIME.start_timer()
+
 
         camera_ids = tuple(
             self.ecs_manager.find_entities_with_all_components(
@@ -151,7 +152,7 @@ class App:
             )
         self.render_jobs = []
 
-        Metrics.TOTAL_RENDER_TIME.set_value((time() - start) * 1000)
+        Metrics.TOTAL_RENDER_TIME.end_timer()
 
     def _draw(self) -> None:
         start = time()
