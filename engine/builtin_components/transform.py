@@ -1,29 +1,21 @@
-from typing import Generic, Self, TypeVar, cast
-
-from pygame import Vector2, Vector3
-from pygame.image import load
-
+from typing import Self
 from ..component import Component
-
-T = TypeVar(
-    "T",
-    bound=Vector2 | Vector3,
-)
+from pygame import Vector2
 
 
-class Transform(Generic[T]):
+class Transform2D(Component):
     def __init__(
         self,
         *,
-        world_pos: T,
-        local_pos: T,
-        size: T,
-        rot: float,
-        z: float,
+        world_pos: Vector2 | None = None,
+        local_pos: Vector2 | None = None,
+        size: Vector2 | None = None,
+        rot: float = 0,
+        z: float = 0,
     ) -> None:
-        self._world_pos: T = world_pos
-        self._local_pos: T = local_pos
-        self._size: T = size
+        self._world_pos: Vector2 = world_pos or Vector2()
+        self._local_pos: Vector2 = local_pos or Vector2()
+        self._size: Vector2 = size or Vector2()
         self._rot: float = rot
         self._z: float = z
 
@@ -31,45 +23,27 @@ class Transform(Generic[T]):
         self._z = new_z
         return self
 
-    def set_world_position(self, new_pos: T) -> Self:
-        self._world_pos = cast(T, new_pos.copy())
+    def set_world_position(self, new_pos: Vector2) -> Self:
+        self._world_pos = new_pos.copy()
         return self
 
-    def set_local_position(self, new_pos: T) -> Self:
-        self._local_pos = cast(T, new_pos.copy())
+    def set_local_position(self, new_pos: Vector2) -> Self:
+        self._local_pos = new_pos.copy()
         return self
 
     @property
-    def local_position(self) -> T:
-        return cast(T, self._local_pos.copy())
+    def local_position(self) -> Vector2:
+        return self._local_pos.copy()
 
     @property
-    def world_position(self) -> T:
-        return cast(T, self._world_pos.copy())
+    def world_position(self) -> Vector2:
+        return self._world_pos.copy()
 
     @property
-    def size(self) -> T:
-        return cast(T, self._size.copy())
+    def size(self) -> Vector2:
+        return self._size.copy()
 
     @property
     def z(self) -> float:
         return self._z
 
-
-class Transform2D(Transform[Vector2], Component):
-    def __init__(
-        self,
-        *,
-        world_pos: Vector2 = Vector2(0, 0),
-        local_pos: Vector2 = Vector2(0, 0),
-        size: Vector2 = Vector2(1, 1),
-        rot: float = 0,
-        z: float = 0,
-    ) -> None:
-        super().__init__(
-            world_pos=world_pos,
-            local_pos=local_pos,
-            size=size,
-            rot=rot,
-            z=z,
-        )
