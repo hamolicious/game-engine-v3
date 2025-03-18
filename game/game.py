@@ -118,7 +118,7 @@ class Game(Engine):
 
         yield Entity(
             builtin_components.Name("Background"),
-            builtin_components.Transform2D(z=-1),
+            builtin_components.Transform2D(),
             builtin_components.Sprite(
                 src="./assets/bg.jpg",
                 width=1000,
@@ -129,7 +129,7 @@ class Game(Engine):
 
         yield Entity(
             builtin_components.Player(),
-            builtin_components.Transform2D(world_pos=Vector2(200, 200), z=1),
+            builtin_components.Transform2D(world_pos=Vector2(200, 200)),
             builtin_components.PhysicsMotion(
                 accel_dir_to_anim_name ={
                     "": "idle",
@@ -156,15 +156,10 @@ class Game(Engine):
         )
 
         yield Entity(
-            builtin_components.Name("Log"),
-            builtin_components.Transform2D(world_pos=Vector2(300, 500), z=-0.5),
-            builtin_components.Sprite(
-                src="./assets/wood log sprite sheet.png",
-                width=50,
-                height=50,
-            ),
+            builtin_components.Name('Tree'),
+            builtin_components.Transform2D(world_pos=Vector2(700, 300)),
+            builtin_components.Sprite(src='./assets/tree.png'),
             builtin_renderers.SpriteRenderer(),
-            builtin_components.Collision(),
         )
 
         yield Entity(
@@ -189,7 +184,7 @@ class Game(Engine):
                 detect_only=(builtin_components.Player,),
             ),
             builtin_components.Wandering(
-                origin=Vector2(300, 500),
+                origin=Vector2(700, 300),
                 min_radius=100,
                 max_radius=200,
             ),

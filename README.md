@@ -17,5 +17,8 @@ ECS game engine. Built to be easily customised and quick to iterate on ideas.
 - [x] Quit on Escape built in system
 - [ ] Control how default systems are mounted
 - [ ] Run Game setup inside App setup
+- [ ] Work out render-order sorting
+- [ ] Parse systems into a DAG
+    - [ ] Parallelise systems
 
 _whatever the fuck I come up with next..._
