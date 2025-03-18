@@ -11,6 +11,12 @@ class Metric:
 
         self.__start: float | None = None
 
+    def running_average(self) -> float:
+        if len(self.running_value) == 0:
+            return 0
+
+        return sum(self.running_value) / len(self.running_value)
+
     def _ensure_size(self) -> None:
         if len(self.running_value) <= self.max_size:
             return
