@@ -65,7 +65,7 @@ class ECSManager:
         new_id = self._generate_entity_id()
         self.entities[new_id] = entity
 
-        for comp in entity._components:
+        for comp in entity._components[::-1]:
             self.add_component_to_entity(new_id, comp)
 
         return new_id
@@ -139,6 +139,7 @@ class ECSManager:
 
             self.components[ct].add(entity_id)
             self.has_map.add_component(entity_id, type(component))
+            self.entities[entity_id]._components.append(component)
 
     def remove_component_from_entity(
         self, entity_id: EntityId, *component_types: Type[Component]

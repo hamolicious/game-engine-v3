@@ -5,6 +5,7 @@ from .collision import Collision
 from .follow import FollowPlayer
 from .health import Health
 from .motion import BaseMotion, DirectMotion, PhysicsMotion
+from .detection import Detection
 from .name import Name
 from .player import Player
 from .sprite import Sprite

@@ -29,8 +29,6 @@ def setup_cameras(ecs: ECSManager) -> None:
             camera.surf = pygame.Surface(display.surface.get_size())
             camera.width, camera.height = camera.surf.get_size()
 
-    print()
-
     if len(cameras_ids) == 1:
         ecs.add_component_to_entity(cameras_ids[0], builtin_components.Camera.Current())
 

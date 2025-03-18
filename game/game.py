@@ -8,8 +8,6 @@ from engine import (
     Engine,
     builtin_components,
     builtin_renderers,
-    builtin_systems,
-    internal_components,
 )
 from engine.component import Component
 from engine.ecs import ECSManager
@@ -178,11 +176,16 @@ class Game(Engine):
             builtin_components.Brain(
                 SkeletonFSM(SkeletonBrainState.IDLE),
             ),
+            builtin_components.Detection(
+                range=200,
+                detect_only=(builtin_components.Player,),
+            ),
             builtin_components.Wandering(
                 origin=Vector2(300, 500),
                 min_radius=100,
                 max_radius=200,
             ),
+            builtin_components.FollowPlayer(),
             builtin_components.SpriteSheet(
                 src="./assets/BODY_skeleton.png",
                 x_count=9,

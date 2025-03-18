@@ -1,4 +1,5 @@
 from .animation import animation
+from .detection import detection
 from .brain import brain
 from .camera import camera, setup_cameras
 from .exit_on_esc import exit_on_esc
