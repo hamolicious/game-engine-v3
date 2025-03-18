@@ -129,7 +129,7 @@ class Game(Engine):
 
         yield Entity(
             builtin_components.Player(),
-            builtin_components.Transform2D(world_pos=Vector2(200, 200)),
+            builtin_components.Transform2D(world_pos=Vector2(200, 200), z=2),
             builtin_components.PhysicsMotion(
                 accel_dir_to_anim_name ={
                     "": "idle",
@@ -157,14 +157,14 @@ class Game(Engine):
 
         yield Entity(
             builtin_components.Name('Tree'),
-            builtin_components.Transform2D(world_pos=Vector2(700, 300)),
+            builtin_components.Transform2D(world_pos=Vector2(700, 300), z=1),
             builtin_components.Sprite(src='./assets/tree.png'),
             builtin_renderers.SpriteRenderer(),
         )
 
         yield Entity(
             builtin_components.Name("Idle Enemy"),
-            builtin_components.Transform2D(),
+            builtin_components.Transform2D(z=2),
             builtin_components.PhysicsMotion(
                 speed=3,
                 friction=2,
@@ -205,7 +205,7 @@ class Game(Engine):
 
         yield Entity(
             builtin_components.Name("Orb"),
-            builtin_components.Transform2D(world_pos=Vector2(150, 150)),
+            builtin_components.Transform2D(world_pos=Vector2(150, 150), z=2),
             builtin_components.PhysicsMotion(
                 speed=2,
                 friction=1,
