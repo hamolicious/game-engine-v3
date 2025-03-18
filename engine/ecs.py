@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from hashlib import md5
 from time import time
-from typing import Callable, Generator, Type, TypeVar, TypeVarTuple, Unpack, cast
+from typing import Callable, Generator, Type, TypeVar, cast
 
 from engine.component import Component, ComponentTemplate
 from engine.entity import Entity, EntityId
@@ -140,6 +140,7 @@ class ECSManager:
             self.components[ct].add(entity_id)
             self.has_map.add_component(entity_id, type(component))
             self.entities[entity_id]._components.append(component)
+            component._mount_time = time()
 
     def remove_component_from_entity(
         self, entity_id: EntityId, *component_types: Type[Component]

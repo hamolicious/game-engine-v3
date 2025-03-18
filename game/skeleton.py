@@ -11,23 +11,18 @@ class State(Enum):
 
 
 class SkeletonFSM(FiniteStateMachine):
-    def __init__(self, start_state: Enum) -> None:
-        super().__init__(start_state)
-
-        self.chase_started: float = 0
-        self.chase_time: float = 5
+    CHASE_TIME = 5
 
     @state(handles=State.IDLE, disables=(FollowPlayer,))
     def idle(self, detect: Detection) -> State:
         if len(detect.in_range) > 0:
-            self.chase_started = time()
             return State.CHASING
 
         return State.IDLE
 
     @state(handles=State.CHASING, disables=(Wandering,))
-    def chasing(self) -> State:
-        if time() > self.chase_started + self.chase_time:
+    def chasing(self, fp: FollowPlayer) -> State:
+        if fp.mounted_time_sec > self.CHASE_TIME:
             return State.IDLE
 
         return State.CHASING
