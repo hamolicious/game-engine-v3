@@ -163,6 +163,19 @@ class Game(Engine):
         )
 
         yield Entity(
+            builtin_components.Name('Campfire'),
+            builtin_components.Transform2D(world_pos=Vector2(700, 500), z=1),
+            builtin_components.SpriteSheet(
+                src='./assets/campfire.png',
+                x_count=5,
+                y_count=1,
+            ),
+            builtin_components.Animation('', {'': ((0,0), (1,0), (2,0), (3,0), (4,0))}),
+            builtin_renderers.AnimationRenderer(),
+        )
+
+
+        yield Entity(
             builtin_components.Name("Idle Enemy"),
             builtin_components.Transform2D(z=2),
             builtin_components.PhysicsMotion(

@@ -20,5 +20,6 @@ ECS game engine. Built to be easily customised and quick to iterate on ideas.
 - [ ] Work out render-order sorting
 - [ ] Parse systems into a DAG
     - [ ] Parallelise systems
+- [ ] Global quadtree
 
 _whatever the fuck I come up with next..._
