@@ -10,7 +10,6 @@ class Component:
     def mounted_at(self) -> float:
         return self._mount_time
 
-
     @property
     def mounted_time_sec(self) -> float:
         return time() - self._mount_time

@@ -23,4 +23,8 @@ def motion(ecs: ECSManager) -> None:
             entity_id, builtin_components.Transform2D
         )
 
+        if motion.accel_direction_to_animation_name_map is not None:
+            animation = ecs.fetch_single_component_from_entity(entity_id, builtin_components.Animation)
+            animation.current_animation = motion.accel_direction_to_animation_name_map[motion.accel_to_cardinal_direction()]
+
         motion.apply(transform, time.delta_time)

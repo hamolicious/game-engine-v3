@@ -1,5 +1,4 @@
 from enum import Enum, auto
-from time import time
 
 from engine.builtin_components import Wandering, Detection, FollowPlayer
 from engine.fsm import FiniteStateMachine, state

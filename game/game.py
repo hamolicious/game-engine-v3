@@ -130,7 +130,15 @@ class Game(Engine):
         yield Entity(
             builtin_components.Player(),
             builtin_components.Transform2D(world_pos=Vector2(200, 200), z=1),
-            builtin_components.PhysicsMotion(),
+            builtin_components.PhysicsMotion(
+                accel_dir_to_anim_name ={
+                    "": "idle",
+                    "N": "walk-up",
+                    "W": "walk-left",
+                    "S": "walk-down",
+                    "E": "walk-right",
+                }
+            ),
             builtin_components.SpriteSheet(
                 src="./assets/BODY_male.png",
                 x_count=9,
@@ -144,13 +152,6 @@ class Game(Engine):
             builtin_components.Collision(),
             builtin_components.Health(),
             builtin_components.WASD(
-                key_to_animation_map={
-                    "": "idle",
-                    "W": "walk-up",
-                    "A": "walk-left",
-                    "S": "walk-down",
-                    "D": "walk-right",
-                }
             ),
         )
 
@@ -172,6 +173,13 @@ class Game(Engine):
             builtin_components.PhysicsMotion(
                 speed=2,
                 friction=2,
+                accel_dir_to_anim_name ={
+                    "": "idle",
+                    "N": "walk-up",
+                    "W": "walk-left",
+                    "S": "walk-down",
+                    "E": "walk-right",
+                }
             ),
             builtin_components.Brain(
                 SkeletonFSM(SkeletonBrainState.IDLE),
