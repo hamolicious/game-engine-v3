@@ -149,6 +149,7 @@ class ECSManager:
         for component in components:
             self.entities[entity_id]._components.remove(component)
             self.has_map.remove_components(entity_id, type(component))
+            self.components[type(component)].remove(entity_id)
 
         return True
 

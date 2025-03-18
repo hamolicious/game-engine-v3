@@ -21,7 +21,7 @@ def simple_wasd(ecs: ECSManager) -> None:
             return
 
         vel = pygame.Vector2()
-        dir = ""
+        dir  = ""
         if keyboard.keys[pygame.K_w]:
             vel += pygame.Vector2(0, -1)
             dir = "W"

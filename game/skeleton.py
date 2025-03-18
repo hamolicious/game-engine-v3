@@ -10,8 +10,8 @@ class State(Enum):
 
 
 class SkeletonFSM(FiniteStateMachine):
-    @state(handles=State.IDLE, disables=(Wandering,))
-    def idle(self, transform: Transform2D) -> State:
+    @state(handles=State.IDLE)
+    def idle(self) -> State:
         return State.IDLE
 
     @state(handles=State.RESTING)
