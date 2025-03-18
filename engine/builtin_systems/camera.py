@@ -48,11 +48,5 @@ def camera(ecs: ECSManager) -> None:
     if len(current_camera_id) > 1:
         raise ValueError("Multiple camera arent supported, _yet_")
 
-    camera = cast(
-        builtin_components.Camera,
-        ecs.fetch_components_from_entity(
-            current_camera_id[0], builtin_components.Camera
-        )[builtin_components.Camera],
-    )
-
+    camera = ecs.fetch_single_component_from_entity(current_camera_id[0], builtin_components.Camera)
     display.surface.blit(camera.surf, camera.ui_offset.xy)
