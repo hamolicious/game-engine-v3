@@ -10,9 +10,9 @@ ECS game engine. Built to be easily customised and quick to iterate on ideas.
 - [x] Add sine wave flowy bop up down thingie mabob
   - [ ] Square wave
   - [ ] Triangle wave
-- [ ] ~Add easing to follow player~
+- [x] ~Add easing to follow player~
   - [x] Use motion systems
-- [ ] Animations
+- [x] Animations
 - [ ] Collisions
 - [x] Quit on Escape built in system
 - [ ] Control how default systems are mounted
