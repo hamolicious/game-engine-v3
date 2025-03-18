@@ -1,9 +1,6 @@
 from contextlib import contextmanager
-from time import gmtime
+from time import gmtime, time
 from typing import Any, Generator
-
-from time import time
-from typing import Generator
 
 from .config import DebugConfig
 
@@ -14,7 +11,11 @@ def _safe_pop[T](arr: list[T]) -> T | None:
 
     return arr.pop(0)
 
+
 def dump_metrics_in_csv() -> None:
+    if not DebugConfig.DUMP_METRICS:
+        return
+
     metrics = tuple(Metrics.get_all_metrics())
     headers = tuple([m.name for m in metrics])
 
@@ -27,10 +28,11 @@ def dump_metrics_in_csv() -> None:
         csv.append(values)
 
     t = gmtime()
-    stamp = f'{t.tm_year}-{t.tm_mon:02}-{t.tm_mday:02}_{t.tm_hour:02}-{t.tm_min:02}-{t.tm_sec:02}'
-    str_lines = map(lambda l: ','.join(map(str, l)) + '\n', csv)
-    with open(f'engine-metrics.dump-{stamp}.csv', 'w') as f:
+    stamp = f"{t.tm_year}-{t.tm_mon:02}-{t.tm_mday:02}_{t.tm_hour:02}-{t.tm_min:02}-{t.tm_sec:02}"
+    str_lines = map(lambda l: ",".join(map(str, l)) + "\n", csv)
+    with open(f"engine-metrics.dump-{stamp}.csv", "w") as f:
         f.writelines(str_lines)
+
 
 @contextmanager
 def dump_metrics_in_csv_on_exit():
@@ -40,10 +42,9 @@ def dump_metrics_in_csv_on_exit():
         dump_metrics_in_csv()
 
 
-
 class Metric:
     def __init__(self, name: str | None = None, max_size: int = 1_000_000) -> None:
-        self.name = name or 'No Name'
+        self.name = name or "No Name"
 
         self.curr_value = 0.0
         self.last_value = 0.0
@@ -80,13 +81,13 @@ class Metric:
         self.__start = time()
 
     def end_timer(self) -> None:
-        """ Records a time, also saves it """
+        """Records a time, also saves it"""
 
         if not DebugConfig.COLLECT_METRICS:
             return
 
         if self.__start is None:
-            raise RuntimeError('ended timer without starting it')
+            raise RuntimeError("ended timer without starting it")
 
         elapsed = time() - self.__start
         self.__start = None
@@ -105,7 +106,7 @@ class Metrics:
     def get_all_metrics(cls) -> Generator[Metric, None, None]:
         for prop_name, prop in cls.__dict__.items():
             of_these_dickheads = [
-                prop_name.startswith('_'),
+                prop_name.startswith("_"),
                 prop_name.upper() != prop_name,
             ]
 
