@@ -193,7 +193,9 @@ class Game(Engine):
                 min_radius=100,
                 max_radius=200,
             ),
-            builtin_components.FollowPlayer(),
+            builtin_components.FollowPlayer(
+                desired_proximity=50,
+            ),
             builtin_components.SpriteSheet(
                 src="./assets/BODY_skeleton.png",
                 x_count=9,
@@ -219,7 +221,9 @@ class Game(Engine):
                 height=25,
             ),
             builtin_components.Health(),
-            builtin_components.FollowPlayer(),
+            builtin_components.FollowPlayer(
+                desired_proximity=70,
+            ),
             BopUpandDown(),
             builtin_renderers.SpriteRenderer(),
         )
