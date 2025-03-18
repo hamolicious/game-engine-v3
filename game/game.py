@@ -171,7 +171,7 @@ class Game(Engine):
             builtin_components.Name("Idle Enemy"),
             builtin_components.Transform2D(),
             builtin_components.PhysicsMotion(
-                speed=2,
+                speed=3,
                 friction=2,
                 accel_dir_to_anim_name ={
                     "": "idle",
