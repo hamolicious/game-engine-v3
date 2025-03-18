@@ -23,4 +23,4 @@ class SpriteRenderer(Renderer):
             transform.world_position + transform.local_position
         ) - render.camera_transform.world_position
 
-        render.camera.surf.blit(sprite.surf, final_pos)
+        render.camera.surf.blit(sprite.surf.convert_alpha(), final_pos)
