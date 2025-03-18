@@ -5,6 +5,8 @@ from typing import Any, Generator
 from time import time
 from typing import Generator
 
+from .config import DebugConfig
+
 
 def _safe_pop[T](arr: list[T]) -> T | None:
     if len(arr) == 0:
@@ -25,7 +27,7 @@ def dump_metrics_in_csv() -> None:
         csv.append(values)
 
     t = gmtime()
-    stamp = f'{t.tm_year}-{t.tm_mon}-{t.tm_mday}-{t.tm_hour}-{t.tm_min}-{t.tm_sec}'
+    stamp = f'{t.tm_year}-{t.tm_mon:02}-{t.tm_mday:02}_{t.tm_hour:02}-{t.tm_min:02}-{t.tm_sec:02}'
     str_lines = map(lambda l: ','.join(map(str, l)) + '\n', csv)
     with open(f'engine-metrics.dump-{stamp}.csv', 'w') as f:
         f.writelines(str_lines)
@@ -65,15 +67,24 @@ class Metric:
         self.running_value = self.running_value[overrun::]
 
     def set_value(self, new_value: float) -> None:
+        if not DebugConfig.COLLECT_METRICS:
+            return
+
         self.last_value = self.curr_value
         self.curr_value = new_value
         self.running_value.append(new_value)
 
     def start_timer(self) -> None:
+        if not DebugConfig.COLLECT_METRICS:
+            return
         self.__start = time()
 
-    def end_timer(self) -> float:
+    def end_timer(self) -> None:
         """ Records a time, also saves it """
+
+        if not DebugConfig.COLLECT_METRICS:
+            return
+
         if self.__start is None:
             raise RuntimeError('ended timer without starting it')
 
@@ -81,7 +92,6 @@ class Metric:
         self.__start = None
 
         self.set_value(elapsed)
-        return elapsed
 
 
 class Metrics:
