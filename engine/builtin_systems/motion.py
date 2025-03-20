@@ -5,8 +5,17 @@ from ..ecs import ECSManager
 from ..system import system
 
 
-@system
-def motion(ecs: ECSManager) -> None:
+# TODO: wtf does mypy want?
+@system(
+    reads=(
+        builtin_components.Transform2D,
+        builtin_components.Animation,
+    ),
+    writes=(builtin_components.BaseMotion,),
+)
+def motion(
+    ecs: ECSManager,
+) -> None:
     time = ecs.get_single_component(internal_components.Time)
     entities = ecs.find_entities_with_any_of_components(
         *builtin_components.BaseMotion.all_variations()
@@ -24,7 +33,11 @@ def motion(ecs: ECSManager) -> None:
         )
 
         if motion.accel_direction_to_animation_name_map is not None:
-            animation = ecs.fetch_single_component_from_entity(entity_id, builtin_components.Animation)
-            animation.current_animation = motion.accel_direction_to_animation_name_map[motion.accel_to_cardinal_direction()]
+            animation = ecs.fetch_single_component_from_entity(
+                entity_id, builtin_components.Animation
+            )
+            animation.current_animation = motion.accel_direction_to_animation_name_map[
+                motion.accel_to_cardinal_direction()
+            ]
 
         motion.apply(transform, time.delta_time)

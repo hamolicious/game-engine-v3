@@ -6,12 +6,13 @@ import pygame
 
 from engine import builtin_systems
 from engine.internal_components import Display, Keyboard, Time
+from engine.metrics import dump_metrics_in_csv_on_exit
 from engine.types import Stages
 
-from engine.metrics import dump_metrics_in_csv_on_exit
 from .app import App
 from .ecs import ECSManager
 from .entity import Entity
+
 
 class Engine:
     def __init__(self) -> None:

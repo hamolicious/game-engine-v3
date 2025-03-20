@@ -1,13 +1,14 @@
 from __future__ import annotations
-from engine.metrics import Metric, Metrics
 
 from hashlib import md5
 from time import time
-from typing import Callable, Generator, Type, TypeVar, cast
+from typing import Generator, Type, TypeVar, cast
 
-from engine.component import Component, ComponentTemplate
-from engine.entity import Entity, EntityId
-from engine.types import Stages
+from .component import Component, ComponentTemplate
+from .entity import Entity, EntityId
+from .metrics import Metric, Metrics
+from .system import System
+from .types import Stages
 
 
 class _HasComponentMap:
@@ -52,7 +53,7 @@ class ECSManager:
         self.components: dict[type[Component], set[EntityId]] = {}
         self.has_map = _HasComponentMap()
 
-        self.systems: dict[Stages, list[Callable[[ECSManager], None]]] = {
+        self.systems: dict[Stages, list[System]] = {
             Stages.SETUP: [],
             Stages.UPDATE: [],
             Stages.DRAW: [],
@@ -156,14 +157,10 @@ class ECSManager:
 
         return True
 
-    def register_system(
-        self, system: Callable[[ECSManager], None], stage: Stages = Stages.UPDATE
-    ) -> None:
+    def register_system(self, system: System, stage: Stages = Stages.UPDATE) -> None:
         self.systems[stage].append(system)
 
-    def unregister_system(
-        self, system: Callable[[ECSManager], None], stage: Stages = Stages.UPDATE
-    ) -> bool:
+    def unregister_system(self, system: System, stage: Stages = Stages.UPDATE) -> bool:
         if system in self.systems[stage]:
             self.systems[stage].remove(system)
             return True
@@ -172,7 +169,9 @@ class ECSManager:
     def run_systems(self, stage: Stages) -> None:
         for system in self.systems[stage]:
             if Metrics.TOTAL_SYSTEM_TIMES.get(system.__name__) is None:
-                Metrics.TOTAL_SYSTEM_TIMES[system.__name__] = Metric(name=f'system__{system.__name__}')
+                Metrics.TOTAL_SYSTEM_TIMES[system.__name__] = Metric(
+                    name=f"system__{system.__name__}"
+                )
 
             Metrics.TOTAL_SYSTEM_TIMES[system.__name__].start_timer()
             system(self)

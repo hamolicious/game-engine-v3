@@ -1,21 +1,75 @@
-import functools
-from typing import Callable, Concatenate, ParamSpec, TypeAlias, TypeVar
+from __future__ import annotations
 
+import functools
+from dataclasses import dataclass
+from typing import Protocol, cast
+
+from engine.component import Component
 from engine.ecs import ECSManager
 
 
+class System(Protocol):
+    _reads_components: tuple[type[Component], ...]
+    _writes_components: tuple[type[Component], ...]
+
+    def __call__(
+        self,
+        ecs: ECSManager,
+    ) -> bool: ...
+
+    @property
+    def __name__(self) -> str: ...
+
+
+class SystemsRegister:
+    @dataclass
+    class Item:
+        reads: tuple[type[Component], ...]
+        writes: tuple[type[Component], ...]
+
+    _index: list[System] = []
+    _register: list[Item] = []
+
+    @classmethod
+    def add_system(
+        cls,
+        system: System,
+        reads: tuple[type[Component], ...],
+        writes: tuple[type[Component], ...],
+    ) -> None:
+        if system in cls._index:
+            return
+
+        cls._index.append(system)
+        cls._register.append(cls.Item(reads, writes))
+
+    @classmethod
+    def get_read_writes(cls, system: System) -> Item:
+        return cls._register[cls._index.index(system)]
+
+    @classmethod
+    def remove_system(cls, system: System) -> None:
+        if system not in cls._index:
+            return
+
+        cls._register.pop(cls._index.index(system))
+        cls._index.remove(system)
+
+
 def system(
-    func: Callable[[ECSManager], None],
-) -> Callable[[ECSManager], None]:
+    reads: tuple[type[Component], ...],
+    writes: tuple[type[Component], ...],
+) -> System:
+    def decorator(func: System) -> System:
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs) -> None:
+            func(*args, **kwargs)
 
-    @functools.wraps(func)
-    def wrapper(ecs: ECSManager) -> None:
-        # Task before calling the wrapped function
-        # print("Before executing function")
+        fuck_off_mypy_i_promise_they_are_the_same = cast(System, wrapper)
+        SystemsRegister.add_system(
+            fuck_off_mypy_i_promise_they_are_the_same, reads or (), writes or ()
+        )
 
-        func(ecs)
+        return fuck_off_mypy_i_promise_they_are_the_same
 
-        # Task after calling the wrapped function
-        # print("After executing function")
-
-    return wrapper
+    return cast(System, decorator)

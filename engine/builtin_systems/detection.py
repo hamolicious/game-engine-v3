@@ -24,5 +24,3 @@ def detection(ecs: ECSManager) -> None:
 
             if dist <= detect.range**2:
                 detect.in_range.append(other)
-            
-    
