@@ -2,7 +2,7 @@ import pygame
 
 from engine import builtin_components
 
-from ..component import Component
+from .. import Component
 
 
 class Wandering(Component):

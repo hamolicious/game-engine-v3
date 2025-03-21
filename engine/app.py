@@ -4,11 +4,11 @@ from typing import cast
 import pygame
 
 from . import builtin_components, builtin_renderers
-from .ecs import ECSManager
+from .common.types import Stages
+from .ecs_manager.ecs import ECSManager
 from .internal_components import Keyboard, Time
 from .internal_components.display import Display
 from .metrics import Metrics
-from .types import Stages
 
 
 class App:
@@ -88,7 +88,6 @@ class App:
 
     def _render(self) -> None:
         Metrics.TOTAL_RENDER_TIME.start_timer()
-
 
         camera_ids = tuple(
             self.ecs_manager.find_entities_with_all_components(

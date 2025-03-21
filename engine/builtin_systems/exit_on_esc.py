@@ -1,8 +1,7 @@
 import pygame
 
-from ..ecs import ECSManager
+from .. import ECSManager, system
 from ..internal_components import Keyboard
-from ..system import system
 
 
 @system

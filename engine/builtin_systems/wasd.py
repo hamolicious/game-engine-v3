@@ -2,10 +2,9 @@ import pygame
 
 from engine.builtin_components.animation import Animation
 
+from .. import ECSManager, system
 from ..builtin_components import WASD, BaseMotion, Transform2D
-from ..ecs import ECSManager
 from ..internal_components import Keyboard
-from ..system import system
 
 
 @system
@@ -21,7 +20,7 @@ def simple_wasd(ecs: ECSManager) -> None:
             return
 
         vel = pygame.Vector2()
-        dir  = ""
+        dir = ""
         if keyboard.keys[pygame.K_w]:
             vel += pygame.Vector2(0, -1)
             dir = "W"

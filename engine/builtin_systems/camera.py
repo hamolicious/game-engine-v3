@@ -4,10 +4,8 @@ import pygame
 
 from engine import internal_components
 
-from .. import builtin_components
-from ..ecs import ECSManager
-from ..internal_components.display import Display
-from ..system import system
+from .. import ECSManager, builtin_components, system
+from ..internal_components import Display
 
 
 @system
@@ -48,5 +46,7 @@ def camera(ecs: ECSManager) -> None:
     if len(current_camera_id) > 1:
         raise ValueError("Multiple camera arent supported, _yet_")
 
-    camera = ecs.fetch_single_component_from_entity(current_camera_id[0], builtin_components.Camera)
+    camera = ecs.fetch_single_component_from_entity(
+        current_camera_id[0], builtin_components.Camera
+    )
     display.surface.blit(camera.surf, camera.ui_offset.xy)

@@ -1,4 +1,4 @@
-from ..component import Component
+from .. import Component
 from ..fsm import FiniteStateMachine
 
 

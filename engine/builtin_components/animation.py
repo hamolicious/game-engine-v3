@@ -1,8 +1,6 @@
 from time import time
 
-from pygame import Vector2
-
-from ..component import Component
+from .. import Component
 
 
 class Animation(Component):

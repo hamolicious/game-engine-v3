@@ -1,7 +1,7 @@
 import functools
-from typing import Callable, Concatenate, ParamSpec, TypeAlias, TypeVar
+from typing import Callable
 
-from engine.ecs import ECSManager
+from ..ecs_manager.ecs import ECSManager
 
 
 def system(

@@ -1,6 +1,8 @@
 from typing import Self
-from ..component import Component
+
 from pygame import Vector2
+
+from .. import Component
 
 
 class Transform2D(Component):
@@ -46,4 +48,3 @@ class Transform2D(Component):
     @property
     def z(self) -> float:
         return self._z
-

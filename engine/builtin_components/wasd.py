@@ -1,6 +1,6 @@
 from typing import Literal, TypeAlias
 
-from ..component import Component
+from .. import Component
 
 WASDKeys: TypeAlias = Literal["W", "A", "S", "D", ""]
 AnimationName: TypeAlias = str

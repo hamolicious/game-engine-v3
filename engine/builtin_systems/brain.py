@@ -1,11 +1,8 @@
 from typing import cast
 
-from engine.component import Component
-
+from .. import Component, ECSManager, system
 from ..builtin_components.brain import Brain
-from ..ecs import ECSManager
 from ..fsm import get_state_disable_components
-from ..system import system
 
 
 @system

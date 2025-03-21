@@ -2,7 +2,7 @@ import functools
 from enum import Enum
 from typing import Any, Callable, Generator, cast, get_type_hints
 
-from .component import Component
+from .common.component import Component
 
 
 def get_state_disable_components(func: Callable) -> tuple[type[Component]]:

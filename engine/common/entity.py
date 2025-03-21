@@ -1,6 +1,6 @@
 from typing import TypeAlias
 
-from engine.component import Component
+from .component import Component
 
 EntityId: TypeAlias = str
 

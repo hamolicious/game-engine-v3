@@ -1,4 +1,4 @@
-from ..component import Component
+from ..common.component import Component
 
 
 class Time(Component):

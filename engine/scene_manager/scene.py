@@ -1,6 +1,6 @@
 from typing import Generator, TypeAlias
 
-from engine.entity import Entity
+from ..common.entity import Entity
 
 SceneSetup: TypeAlias = Generator[Entity, None, None]
 

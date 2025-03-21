@@ -1,6 +1,6 @@
 import pygame
 
-from ..component import Component
+from .. import Component
 
 
 class SpriteSheet(Component):

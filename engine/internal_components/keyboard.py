@@ -1,6 +1,6 @@
 import pygame
 
-from ..component import Component
+from ..common.component import Component
 
 
 class Keyboard(Component):

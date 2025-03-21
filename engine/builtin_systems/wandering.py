@@ -5,8 +5,7 @@ import pygame
 
 from engine import builtin_components
 
-from ..ecs import ECSManager
-from ..system import system
+from .. import ECSManager, system
 
 
 @system

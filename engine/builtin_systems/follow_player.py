@@ -1,8 +1,7 @@
 from typing import cast
 
+from .. import ECSManager, system
 from ..builtin_components import BaseMotion, FollowPlayer, Player, Transform2D
-from ..ecs import ECSManager
-from ..system import system
 
 
 @system

@@ -1,10 +1,6 @@
-from enum import _auto_null
 from time import time
 
-from engine import builtin_components, internal_components
-from engine.ecs import ECSManager
-
-from ..system import system
+from .. import ECSManager, builtin_components, system
 
 
 @system

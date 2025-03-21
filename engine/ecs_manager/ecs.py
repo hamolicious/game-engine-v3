@@ -1,13 +1,14 @@
 from __future__ import annotations
-from engine.metrics import Metric, Metrics
 
 from hashlib import md5
 from time import time
 from typing import Callable, Generator, Type, TypeVar, cast
 
-from engine.component import Component, ComponentTemplate
-from engine.entity import Entity, EntityId
-from engine.types import Stages
+from engine.metrics import Metric, Metrics
+
+from ..common.component import Component, ComponentTemplate
+from ..common.entity import Entity, EntityId
+from ..common.types import Stages
 
 
 class _HasComponentMap:
@@ -172,7 +173,9 @@ class ECSManager:
     def run_systems(self, stage: Stages) -> None:
         for system in self.systems[stage]:
             if Metrics.TOTAL_SYSTEM_TIMES.get(system.__name__) is None:
-                Metrics.TOTAL_SYSTEM_TIMES[system.__name__] = Metric(name=f'system__{system.__name__}')
+                Metrics.TOTAL_SYSTEM_TIMES[system.__name__] = Metric(
+                    name=f"system__{system.__name__}"
+                )
 
             Metrics.TOTAL_SYSTEM_TIMES[system.__name__].start_timer()
             system(self)
