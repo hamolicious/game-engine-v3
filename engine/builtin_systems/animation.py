@@ -1,13 +1,15 @@
-from enum import _auto_null
 from time import time
 
-from engine import builtin_components, internal_components
+from engine import builtin_components
 from engine.ecs import ECSManager
 
 from ..system import system
 
 
-@system
+@system(
+    reads=(),
+    writes=(builtin_components.Animation,),
+)
 def animation(ecs: ECSManager) -> None:
     entities_with_animations = ecs.find_entities_with_all_components(
         builtin_components.Animation

@@ -2,20 +2,17 @@ from __future__ import annotations
 
 import functools
 from dataclasses import dataclass
-from typing import Protocol, cast
+from typing import Callable, Protocol, cast
 
 from engine.component import Component
 from engine.ecs import ECSManager
 
 
 class System(Protocol):
-    _reads_components: tuple[type[Component], ...]
-    _writes_components: tuple[type[Component], ...]
-
     def __call__(
         self,
         ecs: ECSManager,
-    ) -> bool: ...
+    ) -> None: ...
 
     @property
     def __name__(self) -> str: ...
@@ -59,8 +56,8 @@ class SystemsRegister:
 def system(
     reads: tuple[type[Component], ...],
     writes: tuple[type[Component], ...],
-) -> System:
-    def decorator(func: System) -> System:
+):
+    def decorator(func: Callable[[ECSManager], None]):
         @functools.wraps(func)
         def wrapper(*args, **kwargs) -> None:
             func(*args, **kwargs)
@@ -72,4 +69,4 @@ def system(
 
         return fuck_off_mypy_i_promise_they_are_the_same
 
-    return cast(System, decorator)
+    return decorator

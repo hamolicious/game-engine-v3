@@ -8,7 +8,12 @@ from ..fsm import get_state_disable_components
 from ..system import system
 
 
-@system
+# TODO: Turns out I need to be able to dynamically define reads and writes 😒
+# HACK: (maybe) place into seperate stage of it's own?!
+@system(
+    reads=(),
+    writes=(Brain,),
+)
 def brain(ecs: ECSManager) -> None:
     big_brein = ecs.find_entities_with_all_components(Brain)
 

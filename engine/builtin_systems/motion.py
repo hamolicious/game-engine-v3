@@ -7,11 +7,11 @@ from ..system import system
 
 # TODO: wtf does mypy want?
 @system(
-    reads=(
-        builtin_components.Transform2D,
+    reads=(builtin_components.Transform2D,),
+    writes=(
+        builtin_components.BaseMotion,
         builtin_components.Animation,
     ),
-    writes=(builtin_components.BaseMotion,),
 )
 def motion(
     ecs: ECSManager,

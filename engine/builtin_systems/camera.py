@@ -10,7 +10,10 @@ from ..internal_components.display import Display
 from ..system import system
 
 
-@system
+@system(
+    reads=(),
+    writes=(builtin_components.Camera,),
+)
 def setup_cameras(ecs: ECSManager) -> None:
     display = ecs.get_single_component(internal_components.Display)
     cameras_ids = tuple(
@@ -33,7 +36,10 @@ def setup_cameras(ecs: ECSManager) -> None:
         ecs.add_component_to_entity(cameras_ids[0], builtin_components.Camera.Current())
 
 
-@system
+@system(
+    reads=(builtin_components.Camera,),
+    writes=(),
+)
 def camera(ecs: ECSManager) -> None:
     display = ecs.get_single_component(Display)
     current_camera_id = tuple(
@@ -48,5 +54,7 @@ def camera(ecs: ECSManager) -> None:
     if len(current_camera_id) > 1:
         raise ValueError("Multiple camera arent supported, _yet_")
 
-    camera = ecs.fetch_single_component_from_entity(current_camera_id[0], builtin_components.Camera)
+    camera = ecs.fetch_single_component_from_entity(
+        current_camera_id[0], builtin_components.Camera
+    )
     display.surface.blit(camera.surf, camera.ui_offset.xy)

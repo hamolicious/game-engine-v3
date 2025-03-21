@@ -3,7 +3,10 @@ from ..ecs import ECSManager
 from ..system import system
 
 
-@system
+@system(
+    reads=(Transform2D,),
+    writes=(Detection,),
+)
 def detection(ecs: ECSManager) -> None:
     detections = ecs.find_entities_with_all_components(Detection)
 
