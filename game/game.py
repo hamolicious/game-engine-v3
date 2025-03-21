@@ -120,7 +120,7 @@ class Game(Engine):
             builtin_components.Name("Background"),
             builtin_components.Transform2D(),
             builtin_components.Sprite(
-                src="./assets/bg.jpg",
+                src="./assets/house-scene.png",
                 width=1000,
                 height=700,
             ),
