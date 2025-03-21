@@ -5,14 +5,14 @@ from typing import Generator, cast
 from pygame import Vector2
 
 from engine import (
+    Component,
+    ECSManager,
     Engine,
+    Entity,
     builtin_components,
     builtin_renderers,
+    system,
 )
-from engine.component import Component
-from engine.ecs import ECSManager
-from engine.entity import Entity
-from engine.system import system
 
 from .skeleton import SkeletonFSM
 from .skeleton import State as SkeletonBrainState
@@ -131,7 +131,7 @@ class Game(Engine):
             builtin_components.Player(),
             builtin_components.Transform2D(world_pos=Vector2(200, 200), z=2),
             builtin_components.PhysicsMotion(
-                accel_dir_to_anim_name ={
+                accel_dir_to_anim_name={
                     "": "idle",
                     "N": "walk-up",
                     "W": "walk-left",
@@ -151,29 +151,29 @@ class Game(Engine):
             builtin_renderers.AnimationRenderer(),
             builtin_components.Collision(),
             builtin_components.Health(),
-            builtin_components.WASD(
-            ),
+            builtin_components.WASD(),
         )
 
         yield Entity(
-            builtin_components.Name('Tree'),
+            builtin_components.Name("Tree"),
             builtin_components.Transform2D(world_pos=Vector2(700, 300), z=1),
-            builtin_components.Sprite(src='./assets/tree.png'),
+            builtin_components.Sprite(src="./assets/tree.png"),
             builtin_renderers.SpriteRenderer(),
         )
 
         yield Entity(
-            builtin_components.Name('Campfire'),
+            builtin_components.Name("Campfire"),
             builtin_components.Transform2D(world_pos=Vector2(700, 500), z=1),
             builtin_components.SpriteSheet(
-                src='./assets/campfire.png',
+                src="./assets/campfire.png",
                 x_count=5,
                 y_count=1,
             ),
-            builtin_components.Animation('', {'': ((0,0), (1,0), (2,0), (3,0), (4,0))}),
+            builtin_components.Animation(
+                "", {"": ((0, 0), (1, 0), (2, 0), (3, 0), (4, 0))}
+            ),
             builtin_renderers.AnimationRenderer(),
         )
-
 
         yield Entity(
             builtin_components.Name("Idle Enemy"),
@@ -181,13 +181,13 @@ class Game(Engine):
             builtin_components.PhysicsMotion(
                 speed=3,
                 friction=2,
-                accel_dir_to_anim_name ={
+                accel_dir_to_anim_name={
                     "": "idle",
                     "N": "walk-up",
                     "W": "walk-left",
                     "S": "walk-down",
                     "E": "walk-right",
-                }
+                },
             ),
             builtin_components.Brain(
                 SkeletonFSM(SkeletonBrainState.IDLE),

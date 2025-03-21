@@ -3,7 +3,7 @@ from typing import Literal, TypeAlias
 
 import pygame
 
-from .. import ComponentTemplate
+from ..common.component import ComponentTemplate
 from .transform import Transform2D
 
 CardinalDirection: TypeAlias = Literal["N", "E", "S", "W"]

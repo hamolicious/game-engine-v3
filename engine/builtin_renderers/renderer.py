@@ -4,8 +4,8 @@ from typing import Type
 
 from engine import builtin_components
 
-from ..component import Component
-from ..entity import EntityId
+from ..common.component import Component
+from ..common.entity import EntityId
 
 
 class RenderJob:

@@ -1,6 +1,6 @@
 from time import time
 
-from .. import Component
+from ..common.component import Component
 
 
 class Animation(Component):

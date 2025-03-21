@@ -1,6 +1,6 @@
 import pygame
 
-from .. import Component
+from ..common.component import Component
 
 
 class Sprite(Component):

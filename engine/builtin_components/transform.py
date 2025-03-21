@@ -2,7 +2,7 @@ from typing import Self
 
 from pygame import Vector2
 
-from .. import Component
+from ..common.component import Component
 
 
 class Transform2D(Component):

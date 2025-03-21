@@ -1,7 +1,8 @@
 from typing import Type, cast
 
 from .. import builtin_components
-from .renderer import Component, Renderer, RenderJob
+from ..common.component import Component
+from .renderer import Renderer, RenderJob
 
 
 class AnimationRenderer(Renderer):

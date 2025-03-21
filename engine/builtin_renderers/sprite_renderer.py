@@ -1,7 +1,6 @@
 from typing import Type, cast
 
 from engine import builtin_components
-from engine.builtin_renderers import renderer
 
 from .renderer import Component, Renderer, RenderJob
 

@@ -1,4 +1,5 @@
-from .. import Component, EntityId
+from ..common.component import Component
+from ..common.entity import EntityId
 
 
 class Detection(Component):
